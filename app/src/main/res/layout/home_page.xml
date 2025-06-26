@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.MainActivity">
+    tools:context=".controller.HomePageController">
 
     <!-- App Bar at the top -->
     <com.google.android.material.appbar.AppBarLayout
@@ -41,7 +41,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="?android:attr/windowBackground"
+        app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu"
+        app:itemIconPadding="12dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

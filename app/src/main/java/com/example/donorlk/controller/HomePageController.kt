@@ -30,7 +30,7 @@ class HomePageController : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_overview -> {
                     selectedFragment = OverviewFragment()
-                    title = "Overview"
+                    title = "Overviewwwww"
                 }
                 R.id.nav_make_reservation -> {
                     selectedFragment = MakeReservationFragment()
