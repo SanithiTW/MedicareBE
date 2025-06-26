@@ -9,6 +9,9 @@ import com.example.donorlk.view.MakeReservationFragment
 import com.example.donorlk.view.MyReservationsFragment
 import com.example.donorlk.view.OverviewFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.view.Menu
+import android.view.MenuItem
+import android.content.Intent
 
 class HomePageController : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +33,7 @@ class HomePageController : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_overview -> {
                     selectedFragment = OverviewFragment()
-                    title = "Overviewwwww"
+                    title = "Overview"
                 }
                 R.id.nav_make_reservation -> {
                     selectedFragment = MakeReservationFragment()
@@ -56,6 +59,36 @@ class HomePageController : AppCompatActivity() {
         // Set the default fragment when the app starts
         if (savedInstanceState == null) {
             bottomNav.selectedItemId = R.id.nav_overview
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.profile -> {
+                // Open OverviewFragment in the entire screen
+                supportFragmentManager.beginTransaction()
+                    .replace(android.R.id.content, OverviewFragment())
+                    .addToBackStack(null)
+                    .commit()
+                supportActionBar?.title = "Overview"
+                true
+            }
+            R.id.notification -> {
+                // Handle notification click
+                // You can implement your notification logic here
+                supportFragmentManager.beginTransaction()
+                    .replace(android.R.id.content, MyReservationsFragment())
+                    .addToBackStack(null)
+                    .commit()
+                supportActionBar?.title = "Overview"
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }
