@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.donorlk.controller.DonationHistoryController
 import com.example.donorlk.controller.HomePageController
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 //        }
         // 1. Create an Intent to start HomePageController
         // The '.class.java' is required to reference the class for the Intent.
-        val intent = Intent(this, HomePageController::class.java)
+        val intent = Intent(this, DonationHistoryController::class.java)
 
         // 2. Start the HomePageController activity
         startActivity(intent)
