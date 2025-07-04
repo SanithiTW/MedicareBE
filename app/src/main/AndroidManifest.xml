@@ -22,7 +22,11 @@
             </intent-filter>
         </activity>
 
-
+        <!-- This is your home page, launched AFTER login -->
+        <!-- No LAUNCHER intent-filter here -->
+        <activity
+            android:name=".controller.HomePageController"
+            android:exported="false" />
     </application>
 
 </manifest>
