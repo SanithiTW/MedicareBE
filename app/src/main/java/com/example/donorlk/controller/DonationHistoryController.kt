@@ -22,23 +22,23 @@ class DonationHistoryController : AppCompatActivity() {
         // Create dummy data
         val dummyDonations = listOf(
             DonationModel(
-                "Blood Donation Camp",
+                "Emergency Blood Donation",
                 "2025-07-01",
                 "National Hospital, Colombo"
             ),
             DonationModel(
-                "Emergency Blood Drive",
-                "2025-06-28",
+                "Normal Blood Donation",
+                "2025-04-28",
                 "General Hospital, Kandy"
             ),
             DonationModel(
-                "Community Blood Donation",
-                "2025-06-15",
+                "Normal Blood Donation",
+                "2025-01-02",
                 "Red Cross Center, Galle"
             ),
             DonationModel(
-                "University Blood Camp",
-                "2025-06-10",
+                "Normal Blood Donation",
+                "2024-06-10",
                 "University of Colombo"
             )
         )
