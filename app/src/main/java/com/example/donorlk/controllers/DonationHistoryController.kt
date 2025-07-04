@@ -1,11 +1,11 @@
-package com.example.donorlk.controller
+package com.example.donorlk.controllers
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.donorlk.R
-import com.example.donorlk.model.DonationModel
+import com.example.donorlk.models.DonationModel
 import com.example.donorlk.adapters.DonationAdapter
 
 class DonationHistoryController : AppCompatActivity() {

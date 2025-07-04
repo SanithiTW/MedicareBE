@@ -2,12 +2,8 @@ package com.example.donorlk
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.donorlk.controller.DonationHistoryController
-import com.example.donorlk.controller.HomePageController
+import com.example.donorlk.controllers.DonationFormController
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 //        }
         // 1. Create an Intent to start HomePageController
         // The '.class.java' is required to reference the class for the Intent.
-        val intent = Intent(this, DonationHistoryController::class.java)
+        val intent = Intent(this, DonationFormController::class.java)
 
         // 2. Start the HomePageController activity
         startActivity(intent)
