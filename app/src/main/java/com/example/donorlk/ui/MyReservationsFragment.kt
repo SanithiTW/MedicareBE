@@ -1,4 +1,4 @@
-package com.example.donorlk.view
+package com.example.donorlk.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,23 +14,21 @@ import com.example.donorlk.models.Reservation
 class MyReservationsFragment : Fragment() {
 
     private lateinit var adapter: ReservationAdapter
-    private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_my_reservations, container, false)
-        recyclerView = view.findViewById(R.id.reservationsRecyclerView)
-        return view
+        return inflater.inflate(R.layout.fragment_my_reservations, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val recyclerView = view.findViewById<RecyclerView>(R.id.reservationsRecyclerView)
         adapter = ReservationAdapter()
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
         // Load dummy data
