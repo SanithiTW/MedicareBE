@@ -12,6 +12,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.view.Menu
 import android.view.MenuItem
 import android.content.Intent
+import androidx.core.graphics.toColor
 
 class HomePageController : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +51,7 @@ class HomePageController : AppCompatActivity() {
                     .replace(R.id.fragment_container, selectedFragment)
                     .commit()
                 supportActionBar?.title = title
+
             }
 
             true

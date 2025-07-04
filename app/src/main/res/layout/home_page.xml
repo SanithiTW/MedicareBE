@@ -44,6 +44,7 @@
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu"
-        app:itemIconPadding="12dp" />
+        app:itemIconPadding="12dp"
+        app:itemIconTint="@color/bottom_nav_icon_color" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
