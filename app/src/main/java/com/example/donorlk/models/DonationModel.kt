@@ -1,4 +1,4 @@
-package com.example.donorlk.model
+package com.example.donorlk.models
 
 data class DonationModel(
     val title: String,

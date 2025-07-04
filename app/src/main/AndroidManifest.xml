@@ -25,12 +25,17 @@
         <!-- This is your home page, launched AFTER login -->
         <!-- No LAUNCHER intent-filter here -->
         <activity
-            android:name=".controller.HomePageController"
+            android:name=".controllers.HomePageController"
             android:exported="false" />
 
         <!-- Donation History Page -->
         <activity
-            android:name=".controller.DonationHistoryController"
+            android:name=".controllers.DonationHistoryController"
+            android:exported="false" />
+
+        <!-- Donation Form Page -->
+        <activity
+            android:name=".controllers.DonationFormController"
             android:exported="false" />
     </application>
 

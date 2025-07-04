@@ -1,18 +1,16 @@
-package com.example.donorlk.controller
+package com.example.donorlk.controllers
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.example.donorlk.R
-import com.example.donorlk.view.MakeReservationFragment
-import com.example.donorlk.view.MyReservationsFragment
-import com.example.donorlk.view.OverviewFragment
+import com.example.donorlk.views.MakeReservationFragment
+import com.example.donorlk.views.MyReservationsFragment
+import com.example.donorlk.views.OverviewFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.view.Menu
 import android.view.MenuItem
-import android.content.Intent
-import androidx.core.graphics.toColor
 
 class HomePageController : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

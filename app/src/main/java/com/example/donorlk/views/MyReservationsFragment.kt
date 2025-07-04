@@ -1,4 +1,4 @@
-package com.example.donorlk.view
+package com.example.donorlk.views
 
 import android.os.Bundle
 import android.view.LayoutInflater

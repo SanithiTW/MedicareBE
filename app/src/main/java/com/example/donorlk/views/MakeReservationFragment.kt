@@ -1,4 +1,4 @@
-package com.example.donorlk.view
+package com.example.donorlk.views
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.donorlk.R
 
-class OverviewFragment : Fragment() {
+class MakeReservationFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_overview, container, false)
+        return inflater.inflate(R.layout.fragment_make_reservation, container, false)
     }
 }
