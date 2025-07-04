@@ -11,6 +11,7 @@ import com.example.donorlk.controller.HomePageController
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 //        enableEdgeToEdge()
 //        setContentView(R.layout.my_reservations)
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -28,5 +29,6 @@ class MainActivity : AppCompatActivity() {
         // 3. Finish the MainActivity so the user cannot navigate back to it.
         // This effectively makes HomePageController the first screen of your app.
         finish()
+
     }
 }
