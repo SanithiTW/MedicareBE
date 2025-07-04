@@ -19,12 +19,19 @@ class HomePageController : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_page)
 
+        // Set status bar color to match app bar color
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = android.graphics.Color.parseColor("#FF4747")
+        }
+
         // --- View Setup ---
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+        toolbar.setTitleTextColor(android.graphics.Color.BLACK)
         supportActionBar?.title = "Home"
 
         val bottomNav: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNav.itemBackground = null
 
         // --- Controller Logic ---
         bottomNav.setOnItemSelectedListener { item ->
