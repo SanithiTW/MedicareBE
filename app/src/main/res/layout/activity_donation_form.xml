@@ -31,6 +31,7 @@
         android:id="@+id/submitButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="#FF4747"
         android:text="Submit"
         android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"/>
