@@ -27,6 +27,11 @@
         <activity
             android:name=".controller.HomePageController"
             android:exported="false" />
+
+        <!-- Donation History Page -->
+        <activity
+            android:name=".controller.DonationHistoryController"
+            android:exported="false" />
     </application>
 
 </manifest>
