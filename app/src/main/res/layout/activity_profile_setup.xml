@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <!-- Top Bar with Shadow and Back Button -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/top_bar_shadow">
+
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_back_arrow"
+            android:contentDescription="Back" />
+    </LinearLayout>
+
+    <!-- Scrollable Profile Form -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/topBar"
+        android:padding="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile Setup"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Almost done. Please fill this basic informations."
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#DDDDDD"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Icon -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:src="@drawable/ic_person"
+                    android:padding="18dp"
+                    android:background="@drawable/circle_light_red"
+                    android:contentDescription="Person Icon" />
+            </LinearLayout>
+
+            <!-- Section Header -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Personal Information"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:gravity="center"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Full Name -->
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Full Name"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp"/>
+            <EditText
+                android:id="@+id/fullNameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="John Hope"
+                android:background="@drawable/rounded_edittext"
+                android:padding="12dp"
+                android:textColor="#000000"
+                android:textColorHint="#999999"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Mobile -->
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mobile"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp"/>
+            <EditText
+                android:id="@+id/mobileEditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="+94 0915525456"
+                android:background="@drawable/rounded_edittext"
+                android:inputType="phone"
+                android:padding="12dp"
+                android:textColor="#000000"
+                android:textColorHint="#999999"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Date of Birth -->
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date of Birth"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp"/>
+            <EditText
+                android:id="@+id/dobEditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="02 Jan 2003"
+                android:background="@drawable/rounded_edittext"
+                android:drawableEnd="@drawable/ic_calander"
+                android:focusable="false"
+                android:padding="12dp"
+                android:textColor="#000000"
+                android:textColorHint="#999999"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Gender -->
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gender"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp"/>
+            <Spinner
+                android:id="@+id/genderSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/rounded_edittext"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Blood Group -->
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Blood Group"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp"/>
+            <Spinner
+                android:id="@+id/bloodGroupSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/rounded_edittext"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- NIC -->
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NIC"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp"/>
+            <EditText
+                android:id="@+id/nicEditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="200307200565"
+                android:inputType="number"
+                android:background="@drawable/rounded_edittext"
+                android:padding="12dp"
+                android:textColor="#000000"
+                android:textColorHint="#999999"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Province -->
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Province"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp"/>
+            <Spinner
+                android:id="@+id/provinceSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/rounded_edittext"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Full City -->
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Full City"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp"/>
+            <Spinner
+                android:id="@+id/citySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/rounded_edittext"
+                android:layout_marginBottom="32dp"/>
+
+            <!-- Next Button -->
+            <Button
+                android:id="@+id/nextButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Next"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#FF4B4B"
+                android:layout_marginBottom="24dp"/>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

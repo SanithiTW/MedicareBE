@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:id="@+id/login"
     android:padding="24dp">
 
+
+    <!-- Custom Top Bar -->
     <LinearLayout
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="0dp"
         android:layout_margin="24dp">
 
+
         <!-- Back Arrow -->
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
             android:src="@drawable/ic_back_arrow"
             android:contentDescription="Back"
             android:layout_gravity="start"
@@ -65,97 +70,167 @@
             android:textColor="#000000"
             android:layout_marginBottom="4dp" />
 
-        <EditText
-            android:id="@+id/passwordEditText"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="john@email.com"
-            android:background="@android:drawable/edit_text"
-            android:inputType="textPassword"
-            android:padding="12dp"
-            android:textColor="#000000"
-            android:textColorHint="#999999"
-            android:layout_marginBottom="4dp" />
 
-        <!-- Forgot password -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Forgot password?"
-            android:textSize="12sp"
-            android:textColor="#000000"
-            android:layout_gravity="end"
-            android:layout_marginBottom="16dp" />
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/topBar"
+        android:padding="40dp">
 
-        <!-- Login Button -->
-        <Button
-            android:id="@+id/loginButton"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="Login"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#FF4B4B"
-            android:layout_marginBottom="24dp" />
-
-        <!-- Divider -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="16dp">
+            android:orientation="vertical">
 
-            <View
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="1dp"
-                android:background="#DDDDDD" />
+            <!-- Subtitle -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome to Blood Care!"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="  OR Login with  "
-                android:textColor="#CCCCCC"
-                android:textSize="12sp" />
+                android:text="Enter your email address and password"
+                android:textSize="14sp"
+                android:layout_marginBottom="24dp"
+                android:textColor="#555555" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="1dp"
-                android:background="#DDDDDD" />
-        </LinearLayout>
+            <!-- Logo -->
+            <ImageView
+                android:id="@+id/logoImage"
+                android:layout_width="226dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="24dp"
+                android:contentDescription="Logo"
+                android:src="@drawable/donorlk_logo" />
 
-        <!-- Google Button -->
-        <Button
-            android:id="@+id/googleLoginButton"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="Google"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#FFA07A"
-            android:layout_marginBottom="24dp" />
-
-        <!-- Signup Text -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal">
-
+            <!-- Email -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Don’t have an account? "
+                android:text="Email"
+                android:textSize="14sp"
                 android:textColor="#000000"
-                android:textSize="14sp" />
+                android:layout_marginBottom="4dp" />
 
+            <EditText
+                android:id="@+id/emailEditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="john@email.com"
+                android:background="@drawable/rounded_edittext"
+                android:inputType="textEmailAddress"
+                android:padding="12dp"
+                android:textColor="#000000"
+                android:textColorHint="#999999"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Password -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Signup"
-                android:textColor="#FF4B4B"
-                android:textSize="14sp" />
-        </LinearLayout>
+                android:text="Password"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:layout_marginBottom="4dp" />
 
-    </LinearLayout>
-</ScrollView>
+            <EditText
+                android:id="@+id/passwordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Enter password"
+                android:background="@drawable/rounded_edittext"
+                android:inputType="textPassword"
+                android:padding="12dp"
+                android:textColor="#000000"
+                android:textColorHint="#999999"
+                android:layout_marginBottom="4dp" />
+
+            <!-- Forgot password -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Forgot password?"
+                android:textSize="12sp"
+                android:textColor="#000000"
+                android:layout_gravity="end"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Login Button -->
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Login"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#FF4B4B"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Divider -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="16dp">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="1dp"
+                    android:background="#DDDDDD" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  OR Login with  "
+                    android:textColor="#CCCCCC"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="1dp"
+                    android:background="#DDDDDD" />
+            </LinearLayout>
+
+            <!-- Google Login -->
+            <Button
+                android:id="@+id/googleLoginButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Google"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#FFA07A"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Signup prompt -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Don’t have an account? "
+                    android:textColor="#000000"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Signup"
+                    android:textColor="#FF4B4B"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
