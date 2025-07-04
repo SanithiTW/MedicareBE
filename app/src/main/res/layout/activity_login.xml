@@ -3,12 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:id="@+id/login"
     android:padding="24dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="0dp"
+        android:layout_margin="24dp">
 
         <!-- Back Arrow -->
         <ImageView
@@ -16,24 +19,10 @@
             android:layout_height="24dp"
             android:src="@drawable/ic_back_arrow"
             android:contentDescription="Back"
+            android:layout_gravity="start"
+            android:layout_marginTop="0dp"
+            android:layout_marginStart="0dp"
             android:layout_marginBottom="16dp" />
-
-        <!-- Title -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Welcome to Blood Care!"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="#000000" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enter your email address and password"
-            android:textSize="14sp"
-            android:layout_marginBottom="24dp"
-            android:textColor="#555555" />
 
         <!-- Logo -->
 
