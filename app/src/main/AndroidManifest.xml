@@ -27,7 +27,6 @@
         <activity
             android:name=".controller.HomePageController"
             android:exported="false" />
-
     </application>
 
 </manifest>

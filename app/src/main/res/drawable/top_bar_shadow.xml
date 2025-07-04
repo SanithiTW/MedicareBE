@@ -1,0 +1,18 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Top bar background -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFF"/>
+        </shape>
+    </item>
+
+    <!-- Bottom-only shadow -->
+    <item android:top="55dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#8F000000"
+                android:endColor="#00000000"
+                android:angle="270"/>
+        </shape>
+    </item>
+</layer-list>
