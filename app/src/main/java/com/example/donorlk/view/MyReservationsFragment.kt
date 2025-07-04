@@ -40,7 +40,7 @@ class MyReservationsFragment : Fragment() {
     private fun loadDummyReservations() {
         val dummyReservations = listOf(
             Reservation(
-                time = "09:00 AM",
+                time = "19:00 AM",
                 date = "July 5, 2025",
                 place = "Central Blood Bank"
             ),
