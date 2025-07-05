@@ -3,10 +3,9 @@ package com.example.donorlk.controllers
 import android.content.Intent
 import android.os.Bundle
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import com.example.donorlk.R
 
-class RegistrationController : AppCompatActivity() {
+class RegistrationController : BaseActivity() {
     private lateinit var nameEditText: EditText
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText

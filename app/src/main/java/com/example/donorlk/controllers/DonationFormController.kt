@@ -1,7 +1,6 @@
 package com.example.donorlk.controllers
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.Button
@@ -10,7 +9,7 @@ import com.example.donorlk.R
 import com.example.donorlk.adapters.DonationQuestionAdapter
 import com.example.donorlk.models.DonationQuestion
 
-class DonationFormController : AppCompatActivity() {
+class DonationFormController : BaseActivity() {
     private lateinit var questionsAdapter: DonationQuestionAdapter
     private val questions = mutableListOf<DonationQuestion>()
 

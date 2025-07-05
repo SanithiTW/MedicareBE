@@ -1,6 +1,5 @@
 package com.example.donorlk.controllers
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -12,15 +11,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.view.Menu
 import android.view.MenuItem
 
-class HomePageController : AppCompatActivity() {
+class HomePageController : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_page)
-
-        // Set status bar color to match app bar color
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = android.graphics.Color.parseColor("#FF4747")
-        }
 
         // --- View Setup ---
         val toolbar: Toolbar = findViewById(R.id.toolbar)

@@ -4,11 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import com.example.donorlk.R
 import java.util.Locale
 
-class VerificationController : AppCompatActivity() {
+class VerificationController : BaseActivity() {
     private lateinit var emailDisplay: TextView
     private lateinit var verificationInput: EditText
     private lateinit var verifyButton: Button
