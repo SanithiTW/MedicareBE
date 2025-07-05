@@ -11,7 +11,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/topBar"
         android:layout_marginTop="40dp"
         tools:ignore="NotSibling">
 
@@ -74,6 +73,7 @@
 
             <!-- Forgot password -->
             <TextView
+                android:id="@+id/forgotPasswordText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Forgot password?"
@@ -140,11 +140,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Don’t have an account? "
+                    android:text="Don't have an account? "
                     android:textColor="#000000"
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/signupText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Signup"

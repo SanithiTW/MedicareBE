@@ -12,31 +12,47 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DONORlk"
         tools:targetApi="31">
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- This is your home page, launched AFTER login -->
-        <!-- No LAUNCHER intent-filter here -->
+        <activity
+            android:name=".controllers.LoginController"
+            android:exported="false" />
+
+        <activity
+            android:name=".controllers.RegistrationController"
+            android:exported="false" />
+
+        <activity
+            android:name=".controllers.ProfileSetupController"
+            android:exported="false" />
+
+        <activity
+            android:name=".controllers.ForgotPasswordController"
+            android:exported="false" />
+
+        <activity
+            android:name=".controllers.VerificationController"
+            android:exported="false" />
+
         <activity
             android:name=".controllers.HomePageController"
             android:exported="false" />
 
-        <!-- Donation History Page -->
         <activity
             android:name=".controllers.DonationHistoryController"
             android:exported="false" />
 
-        <!-- Donation Form Page -->
         <activity
             android:name=".controllers.DonationFormController"
             android:exported="false" />
-    </application>
 
+    </application>
 </manifest>

@@ -3,29 +3,17 @@ package com.example.donorlk
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.donorlk.controllers.DonationFormController
+import com.example.donorlk.controllers.LoginController
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        enableEdgeToEdge()
-//        setContentView(R.layout.activity_verification_page)
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-//            insets
-//        }
-        // 1. Create an Intent to start HomePageController
-        // The '.class.java' is required to reference the class for the Intent.
-        val intent = Intent(this, DonationFormController::class.java)
-
-        // 2. Start the HomePageController activity
+        // Start with LoginController
+        val intent = Intent(this, LoginController::class.java)
         startActivity(intent)
 
-        // 3. Finish the MainActivity so the user cannot navigate back to it.
-        // This effectively makes HomePageController the first screen of your app.
+        // Finish MainActivity so user cannot navigate back
         finish()
-
     }
 }
