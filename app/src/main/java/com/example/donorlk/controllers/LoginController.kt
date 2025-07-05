@@ -21,6 +21,10 @@ class LoginController : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = android.graphics.Color.parseColor("#FF4747")
+        }
+
         // Initialize views
         initializeViews()
         setupClickListeners()
@@ -39,7 +43,7 @@ class LoginController : AppCompatActivity() {
         loginButton.setOnClickListener {
             // For display purposes, just check if fields are not empty
             if (emailEditText.text.isNotEmpty() && passwordEditText.text.isNotEmpty()) {
-                startActivity(Intent(this, DonationFormController::class.java))
+                startActivity(Intent(this, HomePageController::class.java))
                 finish()
             } else {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
