@@ -39,6 +39,11 @@ class DonationHistoryController : BaseActivity() {
                 "Normal Blood Donation",
                 "2024-06-10",
                 "University of Colombo"
+            ),
+            DonationModel(
+                "Normal Blood Donation",
+                "2024-06-10",
+                "University of Colombo"
             )
         )
 

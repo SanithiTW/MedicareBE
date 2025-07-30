@@ -58,7 +58,8 @@ class MyReservationsFragment : Fragment() {
                 time = "04:00 PM",
                 date = "July 20, 2025",
                 place = "Regional Medical Center"
-            )
+            ),
+
         )
 
         adapter.updateReservations(dummyReservations)
