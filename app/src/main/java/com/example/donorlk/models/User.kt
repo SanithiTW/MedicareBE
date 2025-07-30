@@ -1,15 +1,16 @@
 package com.example.donorlk.models
 
 data class User(
-    val id: String = "",
-    val email: String = "",
-    val password: String = "",
+    val uid: String = "",
     val name: String = "",
+    val email: String = "",
+    val role: String = "donator", // Default role for self-registration
     val mobile: String = "",
-    val dob: String = "",
+    val dateOfBirth: String = "",
     val gender: String = "",
     val bloodGroup: String = "",
     val nic: String = "",
     val province: String = "",
-    val city: String = ""
+    val city: String = "",
+    val createdAt: Long = System.currentTimeMillis()
 )

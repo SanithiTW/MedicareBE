@@ -12,10 +12,12 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.lifecycleScope
 import com.example.donorlk.R
+import com.example.donorlk.models.User
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 class LoginController : BaseActivity() {
@@ -28,13 +30,15 @@ class LoginController : BaseActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var credentialManager: CredentialManager
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // Initialize Firebase Auth and Credential Manager
+        // Initialize Firebase Auth, Firestore and Credential Manager
         auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
         credentialManager = CredentialManager.create(this)
 
         // Initialize views
@@ -53,13 +57,7 @@ class LoginController : BaseActivity() {
 
     private fun setupClickListeners() {
         loginButton.setOnClickListener {
-            // For display purposes, just check if fields are not empty
-            if (emailEditText.text.isNotEmpty() && passwordEditText.text.isNotEmpty()) {
-                startActivity(Intent(this, HomePageController::class.java))
-                finish()
-            } else {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
-            }
+            loginWithEmailPassword()
         }
 
         googleLoginButton.setOnClickListener {
@@ -73,6 +71,100 @@ class LoginController : BaseActivity() {
         signupText.setOnClickListener {
             startActivity(Intent(this, RegistrationController::class.java))
         }
+    }
+
+    private fun loginWithEmailPassword() {
+        val email = emailEditText.text.toString().trim()
+        val password = passwordEditText.text.toString().trim()
+
+        if (email.isEmpty()) {
+            emailEditText.error = "Email is required"
+            return
+        }
+        if (password.isEmpty()) {
+            passwordEditText.error = "Password is required"
+            return
+        }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailEditText.error = "Enter a valid email"
+            return
+        }
+
+        // Show loading (you can add a progress bar if needed)
+        loginButton.isEnabled = false
+        loginButton.text = "Logging in..."
+
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                loginButton.isEnabled = true
+                loginButton.text = "Login"
+
+                if (task.isSuccessful) {
+                    Log.d("EmailLogin", "signInWithEmail:success")
+                    val user = auth.currentUser
+                    user?.let {
+                        checkUserRoleAndRedirect(it.uid)
+                    }
+                } else {
+                    Log.w("EmailLogin", "signInWithEmail:failure", task.exception)
+                    Toast.makeText(this, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+    private fun checkUserRoleAndRedirect(uid: String) {
+        firestore.collection("users").document(uid)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val user = document.toObject(User::class.java)
+                    val role = user?.role ?: "donator"
+
+                    when (role) {
+                        "donator" -> {
+                            startActivity(Intent(this, HomePageController::class.java))
+                            finish()
+                        }
+                        // Add more roles here as needed
+                        // "admin" -> startActivity(Intent(this, AdminDashboardController::class.java))
+                        else -> {
+                            // Default to donator home page
+                            startActivity(Intent(this, HomePageController::class.java))
+                            finish()
+                        }
+                    }
+                } else {
+                    // User document doesn't exist, create one with default role
+                    val currentUser = auth.currentUser
+                    if (currentUser != null) {
+                        val newUser = User(
+                            uid = currentUser.uid,
+                            name = currentUser.displayName ?: "",
+                            email = currentUser.email ?: "",
+                            role = "donator"
+                        )
+
+                        firestore.collection("users").document(currentUser.uid)
+                            .set(newUser)
+                            .addOnSuccessListener {
+                                startActivity(Intent(this, HomePageController::class.java))
+                                finish()
+                            }
+                            .addOnFailureListener { e ->
+                                Log.w("Firestore", "Error creating user document", e)
+                                startActivity(Intent(this, HomePageController::class.java))
+                                finish()
+                            }
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w("Firestore", "Error getting user document", e)
+                Toast.makeText(this, "Error retrieving user data", Toast.LENGTH_SHORT).show()
+                // Default redirect to home page
+                startActivity(Intent(this, HomePageController::class.java))
+                finish()
+            }
     }
 
     private fun signInWithGoogle() {
@@ -127,16 +219,13 @@ class LoginController : BaseActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success
                     Log.d("GoogleSignIn", "signInWithCredential:success")
                     val user = auth.currentUser
-                    Toast.makeText(this, "Welcome ${user?.displayName}", Toast.LENGTH_SHORT).show()
-
-                    // Navigate to home page
-                    startActivity(Intent(this, HomePageController::class.java))
-                    finish()
+                    user?.let {
+                        Toast.makeText(this, "Welcome ${user.displayName}", Toast.LENGTH_SHORT).show()
+                        checkUserRoleAndRedirect(it.uid)
+                    }
                 } else {
-                    // Sign in failed
                     Log.w("GoogleSignIn", "signInWithCredential:failure", task.exception)
                     Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show()
                 }
