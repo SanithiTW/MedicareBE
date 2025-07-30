@@ -221,14 +221,90 @@ class LoginController : BaseActivity() {
                 if (task.isSuccessful) {
                     Log.d("GoogleSignIn", "signInWithCredential:success")
                     val user = auth.currentUser
-                    user?.let {
-                        Toast.makeText(this, "Welcome ${user.displayName}", Toast.LENGTH_SHORT).show()
-                        checkUserRoleAndRedirect(it.uid)
+                    user?.let { firebaseUser ->
+                        Toast.makeText(this, "Welcome ${firebaseUser.displayName}", Toast.LENGTH_SHORT).show()
+
+                        // Check if user document exists in Firestore
+                        checkAndCreateGoogleUser(firebaseUser.uid, firebaseUser.displayName ?: "", firebaseUser.email ?: "")
                     }
                 } else {
                     Log.w("GoogleSignIn", "signInWithCredential:failure", task.exception)
                     Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    private fun checkAndCreateGoogleUser(uid: String, displayName: String, email: String) {
+        firestore.collection("users").document(uid)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    // User document exists, check role and redirect
+                    val user = document.toObject(User::class.java)
+                    val role = user?.role ?: "donator"
+                    redirectBasedOnRole(role)
+                } else {
+                    // User document doesn't exist, create one
+                    val newUser = User(
+                        uid = uid,
+                        name = displayName,
+                        email = email,
+                        role = "donator" // Default role for Google sign-in users
+                    )
+
+                    firestore.collection("users").document(uid)
+                        .set(newUser)
+                        .addOnSuccessListener {
+                            Log.d("GoogleSignIn", "User document created successfully")
+                            Toast.makeText(this, "Profile created successfully!", Toast.LENGTH_SHORT).show()
+
+                            // Navigate to ProfileSetupController to complete profile
+                            val intent = Intent(this, ProfileSetupController::class.java).apply {
+                                putExtra("user_email", email)
+                                putExtra("user_name", displayName)
+                                putExtra("user_uid", uid)
+                                putExtra("is_google_user", true) // Flag to indicate Google user
+                            }
+                            startActivity(intent)
+                            finish()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w("GoogleSignIn", "Error creating user document", e)
+                            Toast.makeText(this, "Profile creation failed, but login successful", Toast.LENGTH_LONG).show()
+
+                            // Still navigate to profile setup
+                            val intent = Intent(this, ProfileSetupController::class.java).apply {
+                                putExtra("user_email", email)
+                                putExtra("user_name", displayName)
+                                putExtra("user_uid", uid)
+                                putExtra("is_google_user", true)
+                            }
+                            startActivity(intent)
+                            finish()
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w("GoogleSignIn", "Error checking user document", e)
+                Toast.makeText(this, "Error retrieving user data", Toast.LENGTH_SHORT).show()
+                // Default redirect to home page
+                redirectBasedOnRole("donator")
+            }
+    }
+
+    private fun redirectBasedOnRole(role: String) {
+        when (role) {
+            "donator" -> {
+                startActivity(Intent(this, HomePageController::class.java))
+                finish()
+            }
+            // Add more roles here as needed
+            // "admin" -> startActivity(Intent(this, AdminDashboardController::class.java))
+            else -> {
+                // Default to donator home page
+                startActivity(Intent(this, HomePageController::class.java))
+                finish()
+            }
+        }
     }
 }
