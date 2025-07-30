@@ -2,6 +2,10 @@
 <resources>
     <string name="app_name">DONOR lk</string>
 
+    <!-- Google Sign-In Configuration -->
+    <!-- TODO: Replace with actual web client ID from Firebase Console after enabling Google Sign-In -->
+    <string name="default_web_client_id">YOUR_WEB_CLIENT_ID_HERE</string>
+
     <!-- Common -->
     <string name="back">Back</string>
     <string name="next">Next</string>
@@ -39,8 +43,7 @@
     <string name="verification_info">Please enter verification code, we sent it to your email: </string>
     <string name="enter_verification_code">Enter verification code</string>
     <string name="resend_code">Resend Code</string>
-    <string name="timer_format">Resend code in %02d:%02d</string>
+    <string name="timer_format" formatted="false">Resend code in %02d:%02d</string>
     <string name="timer_finished">Timer finished</string>
     <string name="didnt_get_code">Did you don\'t get code? </string>
 </resources>
-
