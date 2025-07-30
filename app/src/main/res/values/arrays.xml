@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="gender_array">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="blood_groups_array">
+        <item>A+</item>
+        <item>A-</item>
+        <item>B+</item>
+        <item>B-</item>
+        <item>AB+</item>
+        <item>AB-</item>
+        <item>O+</item>
+        <item>O-</item>
+    </string-array>
+
+    <string-array name="provinces_array">
+        <item>Western Province</item>
+        <item>Central Province</item>
+        <item>Southern Province</item>
+        <item>Northern Province</item>
+        <item>Eastern Province</item>
+        <item>North Western Province</item>
+        <item>North Central Province</item>
+        <item>Uva Province</item>
+        <item>Sabaragamuwa Province</item>
+    </string-array>
+
+    <string-array name="western_cities">
+        <item>Colombo</item>
+        <item>Gampaha</item>
+        <item>Kalutara</item>
+    </string-array>
+
+    <string-array name="central_cities">
+        <item>Kandy</item>
+        <item>Matale</item>
+        <item>Nuwara Eliya</item>
+    </string-array>
+
+    <string-array name="southern_cities">
+        <item>Galle</item>
+        <item>Matara</item>
+        <item>Hambantota</item>
+    </string-array>
+
+    <string-array name="northern_cities">
+        <item>Jaffna</item>
+        <item>Kilinochchi</item>
+        <item>Mannar</item>
+        <item>Mullaitivu</item>
+        <item>Vavuniya</item>
+    </string-array>
+
+    <string-array name="eastern_cities">
+        <item>Trincomalee</item>
+        <item>Batticaloa</item>
+        <item>Ampara</item>
+    </string-array>
+
+    <string-array name="north_western_cities">
+        <item>Kurunegala</item>
+        <item>Puttalam</item>
+    </string-array>
+
+    <string-array name="north_central_cities">
+        <item>Anuradhapura</item>
+        <item>Polonnaruwa</item>
+    </string-array>
+
+    <string-array name="uva_cities">
+        <item>Badulla</item>
+        <item>Monaragala</item>
+    </string-array>
+
+    <string-array name="sabaragamuwa_cities">
+        <item>Ratnapura</item>
+        <item>Kegalle</item>
+    </string-array>
+</resources>
