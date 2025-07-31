@@ -68,7 +68,8 @@
                 android:hint="John Hope"
                 android:background="@drawable/rounded_edittext"
                 android:paddingHorizontal="12dp"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp"
+                android:textColor="#000000"/>
 
             <!-- Email -->
             <TextView
@@ -86,7 +87,8 @@
                 android:inputType="textEmailAddress"
                 android:background="@drawable/rounded_edittext"
                 android:paddingHorizontal="12dp"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp"
+                android:textColor="#000000"/>
 
             <!-- Password -->
             <TextView
@@ -104,7 +106,8 @@
                 android:inputType="textPassword"
                 android:background="@drawable/rounded_edittext"
                 android:paddingHorizontal="12dp"
-                android:layout_marginBottom="24dp" />
+                android:layout_marginBottom="24dp"
+                android:textColor="#000000"/>
 
             <!-- Register Button (changed text from Login to Register) -->
             <Button
