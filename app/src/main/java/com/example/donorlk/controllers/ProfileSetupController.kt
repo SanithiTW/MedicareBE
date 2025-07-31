@@ -1,10 +1,16 @@
 package com.example.donorlk.controllers
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import com.example.donorlk.R
+import com.example.donorlk.models.User
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.*
 
 class ProfileSetupController : BaseActivity() {
     private lateinit var fullNameEditText: EditText
@@ -14,13 +20,20 @@ class ProfileSetupController : BaseActivity() {
     private lateinit var bloodGroupSpinner: Spinner
     private lateinit var nicEditText: EditText
     private lateinit var provinceSpinner: Spinner
-    private lateinit var citySpinner: Spinner
+    private lateinit var cityEditText: EditText  // Changed from citySpinner to cityEditText
     private lateinit var nextButton: Button
     private lateinit var backButton: ImageView
+
+    private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_setup)
+
+        // Initialize Firebase
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         // Initialize views
         initializeViews()
@@ -44,7 +57,7 @@ class ProfileSetupController : BaseActivity() {
         bloodGroupSpinner = findViewById(R.id.bloodGroupSpinner)
         nicEditText = findViewById(R.id.nicEditText)
         provinceSpinner = findViewById(R.id.provinceSpinner)
-        citySpinner = findViewById(R.id.citySpinner)
+        cityEditText = findViewById(R.id.cityEditText)  // Changed from citySpinner
         nextButton = findViewById(R.id.nextButton)
         backButton = findViewById(R.id.backButton)
     }
@@ -52,9 +65,7 @@ class ProfileSetupController : BaseActivity() {
     private fun setupClickListeners() {
         nextButton.setOnClickListener {
             if (validateInput()) {
-                val intent = Intent(this, VerificationController::class.java)
-                intent.putExtra("user_email", getIntent().getStringExtra("user_email"))
-                startActivity(intent)
+                saveCompleteProfile()
             }
         }
 
@@ -98,46 +109,36 @@ class ProfileSetupController : BaseActivity() {
             provinceSpinner.adapter = adapter
         }
 
-        // City spinner will be updated based on province selection
-        provinceSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-                updateCitySpinner(pos)
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Do nothing
-            }
-        }
-    }
-
-    private fun updateCitySpinner(provincePosition: Int) {
-        val cityArrayName = when (provincePosition) {
-            0 -> "western_cities"
-            1 -> "central_cities"
-            2 -> "southern_cities"
-            3 -> "northern_cities"
-            4 -> "eastern_cities"
-            5 -> "north_western_cities"
-            6 -> "north_central_cities"
-            7 -> "uva_cities"
-            8 -> "sabaragamuwa_cities"
-            else -> "western_cities" // Default to Western Province cities
-        }
-
-        val resourceId = resources.getIdentifier(cityArrayName, "array", packageName)
-        ArrayAdapter.createFromResource(
-            this,
-            resourceId,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            citySpinner.adapter = adapter
-        }
+        // Remove city spinner logic since it's now a text field
     }
 
     private fun showDatePicker() {
-        // TODO: Implement date picker dialog
-        Toast.makeText(this, "Date picker will be implemented", Toast.LENGTH_SHORT).show()
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(
+            this,
+            { _, selectedYear, selectedMonth, selectedDay ->
+                // Format the date as DD/MM/YYYY
+                val formattedDate = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear)
+                dobEditText.setText(formattedDate)
+            },
+            year,
+            month,
+            day
+        )
+
+        // Set maximum date to current date (can't select future dates)
+        datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+
+        // Set minimum date to 120 years ago (reasonable age limit)
+        val minCalendar = Calendar.getInstance()
+        minCalendar.add(Calendar.YEAR, -120)
+        datePickerDialog.datePicker.minDate = minCalendar.timeInMillis
+
+        datePickerDialog.show()
     }
 
     private fun validateInput(): Boolean {
@@ -149,6 +150,14 @@ class ProfileSetupController : BaseActivity() {
             mobileEditText.error = "Mobile number is required"
             return false
         }
+
+        // Validate mobile number format (Sri Lankan format)
+        val mobile = mobileEditText.text.toString().trim()
+        if (!mobile.matches(Regex("^[0-9]{10}$")) && !mobile.matches(Regex("^\\+94[0-9]{9}$"))) {
+            mobileEditText.error = "Enter a valid mobile number (10 digits or +94xxxxxxxxx)"
+            return false
+        }
+
         if (dobEditText.text.toString().isEmpty()) {
             dobEditText.error = "Date of birth is required"
             return false
@@ -157,6 +166,80 @@ class ProfileSetupController : BaseActivity() {
             nicEditText.error = "NIC is required"
             return false
         }
+
+        // Validate NIC format (Sri Lankan NIC)
+        val nic = nicEditText.text.toString().trim()
+        if (!nic.matches(Regex("^[0-9]{9}[vVxX]$")) && !nic.matches(Regex("^[0-9]{12}$"))) {
+            nicEditText.error = "Enter a valid NIC (9 digits + V/X or 12 digits)"
+            return false
+        }
+
+        if (cityEditText.text.toString().isEmpty()) {
+            cityEditText.error = "City is required"
+            return false
+        }
+
         return true
+    }
+
+    private fun saveCompleteProfile() {
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Show loading
+        nextButton.isEnabled = false
+        nextButton.text = "Saving..."
+
+        // Get all form data
+        val fullName = fullNameEditText.text.toString().trim()
+        val mobile = mobileEditText.text.toString().trim()
+        val dob = dobEditText.text.toString().trim()
+        val gender = genderSpinner.selectedItem?.toString() ?: ""
+        val bloodGroup = bloodGroupSpinner.selectedItem?.toString() ?: ""
+        val nic = nicEditText.text.toString().trim()
+        val province = provinceSpinner.selectedItem?.toString() ?: ""
+        val city = cityEditText.text.toString().trim()  // Changed from citySpinner
+
+        // Create updated user object
+        val updatedUser = User(
+            uid = currentUser.uid,
+            name = fullName,
+            email = currentUser.email ?: "",
+            role = "donator",
+            mobile = mobile,
+            dateOfBirth = dob,
+            gender = gender,
+            bloodGroup = bloodGroup,
+            nic = nic,
+            province = province,
+            city = city,
+            createdAt = System.currentTimeMillis()
+        )
+
+        // Save to Firestore
+        firestore.collection("users").document(currentUser.uid)
+            .set(updatedUser)
+            .addOnSuccessListener {
+                Log.d("ProfileSetup", "Profile updated successfully")
+                nextButton.isEnabled = true
+                nextButton.text = "Next"
+
+                Toast.makeText(this, "Profile setup completed!", Toast.LENGTH_SHORT).show()
+
+                // Navigate to verification or home page
+                val intent = Intent(this, HomePageController::class.java)
+                startActivity(intent)
+                finish()
+            }
+            .addOnFailureListener { e ->
+                Log.w("ProfileSetup", "Error updating profile", e)
+                nextButton.isEnabled = true
+                nextButton.text = "Next"
+
+                Toast.makeText(this, "Failed to save profile: ${e.message}", Toast.LENGTH_LONG).show()
+            }
     }
 }
