@@ -13,6 +13,7 @@ class RegistrationController : BaseActivity() {
     private lateinit var nameEditText: EditText
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
+    private lateinit var confirmPasswordEditText: EditText
     private lateinit var registerButton: Button
     private lateinit var googleLoginButton: Button
     private lateinit var loginPrompt: TextView
@@ -40,6 +41,7 @@ class RegistrationController : BaseActivity() {
         nameEditText = findViewById(R.id.nameEditText)
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
+        confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText)
         registerButton = findViewById(R.id.loginButton) // Note: ID is loginButton in layout
         googleLoginButton = findViewById(R.id.googleLoginButton)
         loginPrompt = findViewById(R.id.loginPrompt)
@@ -156,6 +158,14 @@ class RegistrationController : BaseActivity() {
         }
         if (passwordEditText.text.length < 6) {
             passwordEditText.error = "Password must be at least 6 characters"
+            return false
+        }
+        if (confirmPasswordEditText.text.isEmpty()) {
+            confirmPasswordEditText.error = "Please confirm your password"
+            return false
+        }
+        if (passwordEditText.text.toString() != confirmPasswordEditText.text.toString()) {
+            confirmPasswordEditText.error = "Passwords do not match"
             return false
         }
         return true
