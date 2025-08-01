@@ -53,6 +53,7 @@
         <activity
             android:name=".controllers.DonationFormController"
             android:exported="false" />
+        <activity android:name=".RecordDonationActivity" />
 
     </application>
 </manifest>
