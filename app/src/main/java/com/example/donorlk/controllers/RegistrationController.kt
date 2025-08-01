@@ -82,15 +82,43 @@ class RegistrationController : BaseActivity() {
                     val firebaseUser = auth.currentUser
 
                     firebaseUser?.let { user ->
-                        // Create user document in Firestore
-                        val userData = User(
-                            uid = user.uid,
-                            name = name,
-                            email = email,
-                            role = "donator" // Default role for self-registration
-                        )
+                        Log.d("EmailVerification", "User created: ${user.email}, UID: ${user.uid}")
+                        Log.d("EmailVerification", "User email verified status: ${user.isEmailVerified}")
 
-                        saveUserToFirestore(userData)
+                        // Try simple email verification first (without ActionCodeSettings)
+                        user.sendEmailVerification()
+                            .addOnCompleteListener { verificationTask ->
+                                registerButton.isEnabled = true
+                                registerButton.text = "Register"
+
+                                if (verificationTask.isSuccessful) {
+                                    Log.d("EmailVerification", "✅ Email verification sent successfully to: ${user.email}")
+                                    Toast.makeText(this, "Email sending successful! Please check your email (including spam folder) for verification.", Toast.LENGTH_LONG).show()
+
+                                    val intent = Intent(this, VerificationController::class.java).apply {
+                                        putExtra("email", email)
+                                        putExtra("user_name", name)
+                                        putExtra("user_uid", user.uid)
+                                    }
+                                    startActivity(intent)
+                                    finish()
+                                } else {
+                                    Log.e("EmailVerification", "❌ Failed to send verification email", verificationTask.exception)
+                                    Log.e("EmailVerification", "Error details: ${verificationTask.exception?.message}")
+
+                                    val errorMessage = verificationTask.exception?.message ?: "Unknown error"
+                                    Toast.makeText(this, "Failed to send verification email: $errorMessage", Toast.LENGTH_LONG).show()
+
+                                    // Still navigate to verification page so user can try resend
+                                    val intent = Intent(this, VerificationController::class.java).apply {
+                                        putExtra("email", email)
+                                        putExtra("user_name", name)
+                                        putExtra("user_uid", user.uid)
+                                    }
+                                    startActivity(intent)
+                                    finish()
+                                }
+                            }
                     }
                 } else {
                     Log.w("EmailRegistration", "createUserWithEmail:failure", task.exception)
@@ -106,43 +134,6 @@ class RegistrationController : BaseActivity() {
                     }
                     Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
                 }
-            }
-    }
-
-    private fun saveUserToFirestore(user: User) {
-        firestore.collection("users").document(user.uid)
-            .set(user)
-            .addOnSuccessListener {
-                Log.d("Firestore", "User document created successfully")
-                registerButton.isEnabled = true
-                registerButton.text = "Register"
-
-                Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
-
-                // Navigate to ProfileSetupController to complete profile
-                val intent = Intent(this, ProfileSetupController::class.java).apply {
-                    putExtra("user_email", user.email)
-                    putExtra("user_name", user.name)
-                    putExtra("user_uid", user.uid)
-                }
-                startActivity(intent)
-                finish()
-            }
-            .addOnFailureListener { e ->
-                Log.w("Firestore", "Error creating user document", e)
-                registerButton.isEnabled = true
-                registerButton.text = "Register"
-
-                Toast.makeText(this, "Registration completed but failed to save profile. Please complete your profile later.", Toast.LENGTH_LONG).show()
-
-                // Still navigate to profile setup
-                val intent = Intent(this, ProfileSetupController::class.java).apply {
-                    putExtra("user_email", user.email)
-                    putExtra("user_name", user.name)
-                    putExtra("user_uid", user.uid)
-                }
-                startActivity(intent)
-                finish()
             }
     }
 
