@@ -1,17 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
-    <!-- Top Bar with Back Button and Title -->
+    <!-- Top Bar -->
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@drawable/top_bar_shadow"
-        android:gravity="center_vertical"
+        android:layout_height="60dp"
         android:orientation="horizontal"
-        android:elevation="4dp">
+        android:gravity="center_vertical"
+        android:background="@drawable/top_bar_shadow">
 
         <ImageView
             android:id="@+id/backButton"
@@ -22,18 +22,9 @@
             android:contentDescription="Back"
             android:clickable="true"
             android:focusable="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Super Admin"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginStart="16dp" />
     </LinearLayout>
 
-    <!-- Scrollable Content -->
+    <!-- Scrollable Form -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -45,133 +36,128 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Title -->
+            <!-- Section Header -->
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Create Super Admin"
+                android:text="Create Admin User"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000"
-                android:layout_marginBottom="4dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Please enter all the required admin credentials below."
-                android:textSize="14sp"
-                android:textColor="#666666"
-                android:layout_marginBottom="16dp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#DDDDDD"
-                android:layout_marginBottom="24dp" />
+                android:layout_marginBottom="24dp"
+                android:gravity="center"/>
 
             <!-- Name -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Full Name"
-                android:textSize="14sp"
-                android:textColor="#000000" />
+                android:text="Name"
+                android:textColor="#000000"/>
             <EditText
-                android:id="@+id/etName"
+                android:id="@+id/NameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:hint="Ashen Kavinda"
+                android:hint="Enter your name"
                 android:background="@drawable/rounded_edittext"
-                android:padding="12dp"
                 android:textColor="#000000"
                 android:textColorHint="#999999"
-                android:layout_marginBottom="16dp" />
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Role -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Role"
+                android:textColor="#000000"/>
+            <Spinner
+                android:id="@+id/roleSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/rounded_edittext"
+                android:layout_marginBottom="16dp"/>
+
+
+            <!-- Location -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location"
+                android:textColor="#000000"/>
+            <EditText
+                android:id="@+id/locationEditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Enter location"
+                android:background="@drawable/rounded_edittext"
+                android:textColor="#000000"
+                android:textColorHint="#999999"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Location ID -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location ID"
+                android:textColor="#000000"/>
+            <EditText
+                android:id="@+id/locationIdEditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Enter location ID"
+                android:background="@drawable/rounded_edittext"
+                android:textColor="#000000"
+                android:textColorHint="#999999"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"/>
+
 
             <!-- Email -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Email"
-                android:textSize="14sp"
-                android:textColor="#000000" />
+                android:textColor="#000000"/>
             <EditText
-                android:id="@+id/etEmail"
+                android:id="@+id/emailEditText"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:hint="admin@email.com"
-                android:inputType="textEmailAddress"
+                android:hint="Enter email"
                 android:background="@drawable/rounded_edittext"
-                android:padding="12dp"
                 android:textColor="#000000"
                 android:textColorHint="#999999"
-                android:layout_marginBottom="16dp" />
+                android:inputType="textEmailAddress"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"/>
 
             <!-- Password -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Password"
-                android:textSize="14sp"
-                android:textColor="#000000" />
+                android:textColor="#000000"/>
             <EditText
-                android:id="@+id/etPassword"
+                android:id="@+id/passwordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:hint="********"
+                android:hint="Enter password"
+                android:background="@drawable/rounded_edittext"
+                android:textColor="#000000"
+                android:textColorHint="#999999"
                 android:inputType="textPassword"
-                android:background="@drawable/rounded_edittext"
                 android:padding="12dp"
-                android:textColor="#000000"
-                android:textColorHint="#999999"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Mobile -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mobile Number"
-                android:textSize="14sp"
-                android:textColor="#000000" />
-            <EditText
-                android:id="@+id/etMobile"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="0771234567"
-                android:inputType="phone"
-                android:background="@drawable/rounded_edittext"
-                android:padding="12dp"
-                android:textColor="#000000"
-                android:textColorHint="#999999"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Province -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Province"
-                android:textSize="14sp"
-                android:textColor="#000000" />
-            <EditText
-                android:id="@+id/etProvince"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Southern Province"
-                android:background="@drawable/rounded_edittext"
-                android:padding="12dp"
-                android:textColor="#000000"
-                android:textColorHint="#999999"
-                android:layout_marginBottom="24dp" />
+                android:layout_marginBottom="32dp"/>
 
             <!-- Confirm Button -->
             <Button
-                android:id="@+id/btnCreateAdmin"
+                android:id="@+id/confirmButton"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:text="Create Super Admin"
+                android:text="Confirm"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#FF4B4B"
-                android:layout_marginBottom="24dp" />
-
+                android:layout_marginBottom="16dp"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

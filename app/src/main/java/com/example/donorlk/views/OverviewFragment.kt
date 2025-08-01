@@ -5,21 +5,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.cardview.widget.CardView
+import com.example.donorlk.CreateAdminActivity
 import com.example.donorlk.R
 import com.example.donorlk.controllers.DonationFormController
 import com.example.donorlk.controllers.DonationHistoryController
+ // ✅ Import this
 
 class OverviewFragment : Fragment() {
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_overview, container, false)
 
-        // Set up click listeners for the cards
         view.findViewById<CardView>(R.id.donationHistoryCard).setOnClickListener {
             val intent = Intent(activity, DonationHistoryController::class.java)
             startActivity(intent)
@@ -27,6 +29,12 @@ class OverviewFragment : Fragment() {
 
         view.findViewById<CardView>(R.id.donationFormCard).setOnClickListener {
             val intent = Intent(activity, DonationFormController::class.java)
+            startActivity(intent)
+        }
+
+        // ✅ Add this block for the "Create Admin" button
+        view.findViewById<Button>(R.id.addAdmin).setOnClickListener {
+            val intent = Intent(activity, CreateAdminActivity::class.java)
             startActivity(intent)
         }
 
