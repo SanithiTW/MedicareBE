@@ -118,23 +118,10 @@ class LoginController : BaseActivity() {
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     val user = document.toObject(User::class.java)
-                    val role = user?.role ?: "donator"
-
-                    when (role) {
-                        "donator" -> {
-                            startActivity(Intent(this, HomePageController::class.java))
-                            finish()
-                        }
-                        // Add more roles here as needed
-                        // "admin" -> startActivity(Intent(this, AdminDashboardController::class.java))
-                        else -> {
-                            // Default to donator home page
-                            startActivity(Intent(this, HomePageController::class.java))
-                            finish()
-                        }
-                    }
+                    val role = user?.role?.lowercase() ?: "donator"
+                    redirectBasedOnRole(role)
                 } else {
-                    // User document doesn't exist, create one with default role
+                    // User doc doesn't exist, create one with default donator role
                     val currentUser = auth.currentUser
                     if (currentUser != null) {
                         val newUser = User(
@@ -143,17 +130,14 @@ class LoginController : BaseActivity() {
                             email = currentUser.email ?: "",
                             role = "donator"
                         )
-
                         firestore.collection("users").document(currentUser.uid)
                             .set(newUser)
                             .addOnSuccessListener {
-                                startActivity(Intent(this, HomePageController::class.java))
-                                finish()
+                                redirectBasedOnRole(newUser.role)
                             }
                             .addOnFailureListener { e ->
                                 Log.w("Firestore", "Error creating user document", e)
-                                startActivity(Intent(this, HomePageController::class.java))
-                                finish()
+                                redirectBasedOnRole("donator")
                             }
                     }
                 }
@@ -161,15 +145,12 @@ class LoginController : BaseActivity() {
             .addOnFailureListener { e ->
                 Log.w("Firestore", "Error getting user document", e)
                 Toast.makeText(this, "Error retrieving user data", Toast.LENGTH_SHORT).show()
-                // Default redirect to home page
-                startActivity(Intent(this, HomePageController::class.java))
-                finish()
+                redirectBasedOnRole("donator")
             }
     }
 
     private fun signInWithGoogle() {
         try {
-            // Use hardcoded fallback for now - this will be replaced when you update google-services.json
             val webClientId = try {
                 getString(R.string.default_web_client_id)
             } catch (e: Exception) {
@@ -224,7 +205,7 @@ class LoginController : BaseActivity() {
                     user?.let { firebaseUser ->
                         Toast.makeText(this, "Welcome ${firebaseUser.displayName}", Toast.LENGTH_SHORT).show()
 
-                        // Check if user document exists in Firestore
+                        // Check if user doc exists in Firestore
                         checkAndCreateGoogleUser(firebaseUser.uid, firebaseUser.displayName ?: "", firebaseUser.email ?: "")
                     }
                 } else {
@@ -239,31 +220,28 @@ class LoginController : BaseActivity() {
             .get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    // User document exists, check role and redirect
                     val user = document.toObject(User::class.java)
-                    val role = user?.role ?: "donator"
+                    val role = user?.role?.lowercase() ?: "donator"
                     redirectBasedOnRole(role)
                 } else {
-                    // User document doesn't exist, create one
                     val newUser = User(
                         uid = uid,
                         name = displayName,
                         email = email,
-                        role = "donator" // Default role for Google sign-in users
+                        role = "donator" // Default role for Google users
                     )
-
                     firestore.collection("users").document(uid)
                         .set(newUser)
                         .addOnSuccessListener {
                             Log.d("GoogleSignIn", "User document created successfully")
                             Toast.makeText(this, "Profile created successfully!", Toast.LENGTH_SHORT).show()
 
-                            // Navigate to ProfileSetupController to complete profile
+                            // Navigate to profile setup if you want
                             val intent = Intent(this, ProfileSetupController::class.java).apply {
                                 putExtra("user_email", email)
                                 putExtra("user_name", displayName)
                                 putExtra("user_uid", uid)
-                                putExtra("is_google_user", true) // Flag to indicate Google user
+                                putExtra("is_google_user", true)
                             }
                             startActivity(intent)
                             finish()
@@ -272,7 +250,6 @@ class LoginController : BaseActivity() {
                             Log.w("GoogleSignIn", "Error creating user document", e)
                             Toast.makeText(this, "Profile creation failed, but login successful", Toast.LENGTH_LONG).show()
 
-                            // Still navigate to profile setup
                             val intent = Intent(this, ProfileSetupController::class.java).apply {
                                 putExtra("user_email", email)
                                 putExtra("user_name", displayName)
@@ -287,21 +264,30 @@ class LoginController : BaseActivity() {
             .addOnFailureListener { e ->
                 Log.w("GoogleSignIn", "Error checking user document", e)
                 Toast.makeText(this, "Error retrieving user data", Toast.LENGTH_SHORT).show()
-                // Default redirect to home page
                 redirectBasedOnRole("donator")
             }
     }
 
     private fun redirectBasedOnRole(role: String) {
-        when (role) {
+        when (role.lowercase()) {
             "donator" -> {
                 startActivity(Intent(this, HomePageController::class.java))
                 finish()
             }
-            // Add more roles here as needed
-            // "admin" -> startActivity(Intent(this, AdminDashboardController::class.java))
+            "admin" -> {
+                startActivity(Intent(this, AdminDashboardController::class.java))
+                finish()
+            }
+            "sub admin" -> {
+                startActivity(Intent(this, AdminDashboardController::class.java))
+                finish()
+            }
+            "super admin" -> {
+                startActivity(Intent(this, AdminDashboardController::class.java))
+                finish()
+            }
             else -> {
-                // Default to donator home page
+                // Default to donator home page if role is unknown
                 startActivity(Intent(this, HomePageController::class.java))
                 finish()
             }

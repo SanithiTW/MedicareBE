@@ -32,11 +32,6 @@ class OverviewFragment : Fragment() {
             startActivity(intent)
         }
 
-        // ✅ Add this block for the "Create Admin" button
-        view.findViewById<Button>(R.id.addAdmin).setOnClickListener {
-            val intent = Intent(activity, CreateAdminActivity::class.java)
-            startActivity(intent)
-        }
 
         return view
     }

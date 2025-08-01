@@ -5,15 +5,12 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.text.SimpleDateFormat
-import java.util.*
 
 class CreateAdminActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
-
-    private var currentUserRole: String? = null  // For storing creator's role
+    private var currentUserRole: String = "unknown"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,38 +28,20 @@ class CreateAdminActivity : AppCompatActivity() {
         val confirmButton = findViewById<Button>(R.id.confirmButton)
         val backButton = findViewById<ImageView>(R.id.backButton)
 
-        val roles = arrayOf("Admin", "Sub Admin", "Super Admin")
+        val roles = arrayOf("Admin", "Sub Admin")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, roles)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         roleSpinner.adapter = adapter
 
         backButton.setOnClickListener { finish() }
 
-        // Get current logged-in user role from Firestore
-        val currentUid = auth.currentUser?.uid
-        if (currentUid != null) {
-            db.collection("users").document(currentUid).get()
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            db.collection("users").document(currentUser.uid)
+                .get()
                 .addOnSuccessListener { document ->
-                    if (document.exists()) {
-                        val role = document.getString("role")
-                        if (role in listOf("Admin", "Sub Admin", "Super Admin")) {
-                            currentUserRole = role
-                        } else {
-                            Toast.makeText(this, "Access denied: Not an admin", Toast.LENGTH_LONG).show()
-                            finish()
-                        }
-                    } else {
-                        Toast.makeText(this, "User document not found", Toast.LENGTH_LONG).show()
-                        finish()
-                    }
+                    currentUserRole = document.getString("role") ?: "unknown"
                 }
-                .addOnFailureListener {
-                    Toast.makeText(this, "Failed to load user data", Toast.LENGTH_LONG).show()
-                    finish()
-                }
-        } else {
-            Toast.makeText(this, "User not logged in", Toast.LENGTH_LONG).show()
-            finish()
         }
 
         confirmButton.setOnClickListener {
@@ -78,14 +57,8 @@ class CreateAdminActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (currentUserRole == null) {
-                Toast.makeText(this, "Your role is not authorized to create admins", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
-
-            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            val createdAt = sdf.format(Date())
-            val generatedUsername = "${role}_${System.currentTimeMillis()}"
+            val createdAt = System.currentTimeMillis()
+            val generatedUsername = "${role}_${createdAt}"
 
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener { result ->
@@ -101,10 +74,10 @@ class CreateAdminActivity : AppCompatActivity() {
                         "createdAt" to createdAt,
                         "createdBy" to currentUserRole
                     )
+
                     db.collection("users").document(uid).set(userMap)
                         .addOnSuccessListener {
                             Toast.makeText(this, "Admin account created!", Toast.LENGTH_LONG).show()
-
                             nameField.text.clear()
                             locationField.text.clear()
                             locationIdField.text.clear()

@@ -73,11 +73,6 @@
                 android:textColor="@android:color/white"
                 android:textStyle="bold"/>
 
-            <Button
-                android:id="@+id/addAdmin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Create Admin" />
 
         </LinearLayout>
 
