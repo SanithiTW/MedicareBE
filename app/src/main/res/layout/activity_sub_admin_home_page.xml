@@ -27,7 +27,41 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/app_red"
-                android:layout_gravity="center" />
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="16dp" />
+
+            <LinearLayout
+                android:id="@+id/logoutContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="16dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/logoutIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@android:drawable/ic_menu_revert"
+                    app:tint="@color/app_red"
+                    android:contentDescription="Logout icon"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/logoutText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Logout"
+                    android:textSize="14sp"
+                    android:textColor="@color/app_red"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -101,8 +135,9 @@
                         android:layout_width="64dp"
                         android:layout_height="64dp"
                         android:src="@android:drawable/ic_menu_mylocation"
-                        android:tint="@color/white"
-                        android:layout_marginEnd="20dp" />
+                        app:tint="@color/white"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="Location icon" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -133,8 +168,9 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@android:drawable/ic_menu_send"
-                        android:tint="@color/white"
-                        android:rotation="180" />
+                        app:tint="@color/white"
+                        android:rotation="180"
+                        android:contentDescription="Arrow icon" />
 
                 </LinearLayout>
 
@@ -164,8 +200,9 @@
                         android:layout_width="64dp"
                         android:layout_height="64dp"
                         android:src="@android:drawable/ic_menu_agenda"
-                        android:tint="@color/white"
-                        android:layout_marginEnd="20dp" />
+                        app:tint="@color/white"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="Agenda icon" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -196,8 +233,9 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@android:drawable/ic_menu_send"
-                        android:tint="@color/white"
-                        android:rotation="180" />
+                        app:tint="@color/white"
+                        android:rotation="180"
+                        android:contentDescription="Arrow icon" />
 
                 </LinearLayout>
 
@@ -227,8 +265,9 @@
                         android:layout_width="64dp"
                         android:layout_height="64dp"
                         android:src="@android:drawable/ic_menu_report_image"
-                        android:tint="@color/white"
-                        android:layout_marginEnd="20dp" />
+                        app:tint="@color/white"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="Report icon" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -259,8 +298,9 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@android:drawable/ic_menu_send"
-                        android:tint="@color/white"
-                        android:rotation="180" />
+                        app:tint="@color/white"
+                        android:rotation="180"
+                        android:contentDescription="Arrow icon" />
 
                 </LinearLayout>
 
