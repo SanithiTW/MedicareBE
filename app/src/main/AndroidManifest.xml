@@ -56,8 +56,6 @@
         <activity android:name=".CreateAdminActivity" />
         <activity android:name=".controllers.AdminDashboardController" />
 
-        <activity android:name=".RecordDonationActivity" />
-
 
     </application>
 </manifest>
