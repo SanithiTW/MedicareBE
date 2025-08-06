@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Location permissions for getting current location -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -55,6 +59,9 @@
             android:exported="false" />
         <activity android:name=".CreateAdminActivity" />
         <activity android:name=".controllers.AdminDashboardController" />
+        <activity
+            android:name=".controllers.AddDonationCenterActivity"
+            android:exported="false" />
 
 
     </application>
