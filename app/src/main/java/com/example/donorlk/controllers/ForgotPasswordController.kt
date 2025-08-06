@@ -2,117 +2,96 @@ package com.example.donorlk.controllers
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.os.CountDownTimer
+import android.widget.*
+import java.util.Locale
 import com.example.donorlk.R
-import com.google.firebase.auth.FirebaseAuth
 
 class ForgotPasswordController : BaseActivity() {
     private lateinit var emailEditText: EditText
-    private lateinit var resetPasswordButton: Button
-    private lateinit var backToLoginText: TextView
-
-    private lateinit var auth: FirebaseAuth
+    private lateinit var verifyButton: Button
+    private lateinit var timerText: TextView
+    private lateinit var resendButton: TextView
+    private lateinit var backButton: ImageView
+    private var countDownTimer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forget_password)
 
-        // Initialize Firebase Auth
-        auth = FirebaseAuth.getInstance()
-
-        // Initialize views
+        // Initialize views first
         initializeViews()
+        // Then set up click listeners
         setupClickListeners()
     }
 
     private fun initializeViews() {
         emailEditText = findViewById(R.id.emailEditText)
-        resetPasswordButton = findViewById(R.id.resetPasswordButton)
-        backToLoginText = findViewById(R.id.backToLoginText)
+        verifyButton = findViewById(R.id.verifyButton)
+        timerText = findViewById(R.id.timerText)
+        resendButton = findViewById(R.id.resendButton)
+        backButton = findViewById(R.id.backButton)
     }
 
     private fun setupClickListeners() {
-        resetPasswordButton.setOnClickListener {
-            sendPasswordResetEmail()
+        verifyButton.setOnClickListener {
+            if (validateEmail()) {
+                val intent = Intent(this, VerificationController::class.java)
+                intent.putExtra("email", emailEditText.text.toString())
+                startActivity(intent)
+            }
         }
 
-        backToLoginText.setOnClickListener {
-            navigateBackToLogin()
+        backButton.setOnClickListener {
+            finish()
+        }
+
+        resendButton.setOnClickListener {
+            if (validateEmail()) {
+                Toast.makeText(this, getString(R.string.resend_code), Toast.LENGTH_SHORT).show()
+                startResendTimer()
+            }
         }
     }
 
-    private fun sendPasswordResetEmail() {
-        val email = emailEditText.text.toString().trim()
-
-        // Validate email input
+    private fun validateEmail(): Boolean {
+        val email = emailEditText.text.toString()
         if (email.isEmpty()) {
             emailEditText.error = "Email is required"
-            return
+            return false
         }
-
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailEditText.error = "Enter a valid email address"
-            return
+            emailEditText.error = "Enter a valid email"
+            return false
         }
+        return true
+    }
 
-        // Show loading state
-        resetPasswordButton.isEnabled = false
-        resetPasswordButton.text = "Sending..."
+    private fun startResendTimer() {
+        countDownTimer?.cancel()
+        resendButton.isEnabled = false
 
-        // Send password reset email using Firebase Auth
-        auth.sendPasswordResetEmail(email)
-            .addOnCompleteListener { task ->
-                // Reset button state
-                resetPasswordButton.isEnabled = true
-                resetPasswordButton.text = "Send Reset Email"
-
-                if (task.isSuccessful) {
-                    Log.d("ForgotPassword", "Password reset email sent successfully")
-
-                    // Show success message
-                    Toast.makeText(
-                        this,
-                        "Password reset email sent to $email. Please check your inbox.",
-                        Toast.LENGTH_LONG
-                    ).show()
-
-                    // Clear the email field
-                    emailEditText.text?.clear()
-
-                    // Optionally navigate back to login after a delay
-                    // You can uncomment the next line if you want automatic navigation
-                    // Handler(Looper.getMainLooper()).postDelayed({ navigateBackToLogin() }, 2000)
-
-                } else {
-                    Log.w("ForgotPassword", "Password reset email failed", task.exception)
-
-                    // Handle specific error cases
-                    val errorMessage = when (task.exception?.message) {
-                        "There is no user record corresponding to this identifier. The user may have been deleted." ->
-                            "No account found with this email address."
-                        "The email address is badly formatted." ->
-                            "Please enter a valid email address."
-                        else ->
-                            "Failed to send reset email. Please try again."
-                    }
-
-                    Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
-                }
+        countDownTimer = object : CountDownTimer(5 * 60 * 1000, 1000) { // 5 minutes
+            override fun onTick(millisUntilFinished: Long) {
+                val minutes = millisUntilFinished / 1000 / 60
+                val seconds = millisUntilFinished / 1000 % 60
+                timerText.text = String.format(
+                    Locale.getDefault(),
+                    getString(R.string.timer_format),
+                    minutes,
+                    seconds
+                )
             }
+
+            override fun onFinish() {
+                timerText.text = getString(R.string.timer_finished)
+                resendButton.isEnabled = true
+            }
+        }.start()
     }
 
-    private fun navigateBackToLogin() {
-        val intent = Intent(this, LoginController::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        startActivity(intent)
-        finish()
-    }
-
-    override fun onBackPressed() {
-        navigateBackToLogin()
+    override fun onDestroy() {
+        super.onDestroy()
+        countDownTimer?.cancel()
     }
 }

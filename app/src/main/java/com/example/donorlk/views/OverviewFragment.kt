@@ -19,14 +19,12 @@ class OverviewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_overview, container, false)
-
         // Navigate to Donation History
         view.findViewById<CardView>(R.id.donationHistoryCard).setOnClickListener {
             val intent = Intent(activity, DonationHistoryController::class.java)
             startActivity(intent)
         }
 
-        // Navigate to Donation Form
         view.findViewById<CardView>(R.id.donationFormCard).setOnClickListener {
             val intent = Intent(activity, DonationFormController::class.java)
             startActivity(intent)
