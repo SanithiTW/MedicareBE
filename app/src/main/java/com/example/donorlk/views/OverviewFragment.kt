@@ -6,22 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.fragment.app.Fragment
 import androidx.cardview.widget.CardView
-import com.example.donorlk.CreateAdminActivity
+import androidx.fragment.app.Fragment
 import com.example.donorlk.R
 import com.example.donorlk.controllers.DonationFormController
 import com.example.donorlk.controllers.DonationHistoryController
- // ✅ Import this
+import com.example.donorlk.RecordDonationActivity
 
 class OverviewFragment : Fragment() {
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_overview, container, false)
-
+        // Navigate to Donation History
         view.findViewById<CardView>(R.id.donationHistoryCard).setOnClickListener {
             val intent = Intent(activity, DonationHistoryController::class.java)
             startActivity(intent)
@@ -31,7 +29,6 @@ class OverviewFragment : Fragment() {
             val intent = Intent(activity, DonationFormController::class.java)
             startActivity(intent)
         }
-
 
         return view
     }
