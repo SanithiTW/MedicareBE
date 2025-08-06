@@ -63,6 +63,9 @@
             android:name=".controllers.AddDonationCenterActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".controllers.SubAdminHomeController"
+            android:exported="false" />
 
     </application>
 </manifest>
