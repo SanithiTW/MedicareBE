@@ -32,12 +32,6 @@ class OverviewFragment : Fragment() {
             startActivity(intent)
         }
 
-        // Navigate to Record Donation page
-        view.findViewById<Button>(R.id.btnOpenRecord).setOnClickListener {
-            val intent = Intent(activity, RecordDonationActivity::class.java)
-            startActivity(intent)
-        }
-
         return view
     }
 }
