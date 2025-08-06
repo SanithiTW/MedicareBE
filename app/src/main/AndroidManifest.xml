@@ -53,8 +53,11 @@
         <activity
             android:name=".controllers.DonationFormController"
             android:exported="false" />
+
         <activity android:name=".CreateAdminActivity" />
         <activity android:name=".controllers.AdminDashboardController" />
+      
+        <activity android:name=".RecordDonationActivity" />
 
 
     </application>
