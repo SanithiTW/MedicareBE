@@ -18,9 +18,9 @@ class ReservationAdapter : RecyclerView.Adapter<ReservationAdapter.ReservationVi
         private val placeTextView: TextView = view.findViewById(R.id.placeTextView)
 
         fun bind(reservation: Reservation) {
-            timeTextView.text = reservation.time
-            dateTextView.text = reservation.date
-            placeTextView.text = reservation.place
+            timeTextView.text = reservation.reservationTime
+            dateTextView.text = reservation.reservationDate
+            placeTextView.text = reservation.centerName
         }
     }
 
