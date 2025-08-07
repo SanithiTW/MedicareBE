@@ -1,7 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="app_red">#D50000</color>
+    <!-- Primary app colors -->
+    <color name="app_red">#D32F2F</color>
+    <color name="app_red_light">#FFEBEE</color>
+    <color name="app_red_dark">#B71C1C</color>
+
+    <!-- Basic colors -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="orange">#FFA07A</color>
-    <!-- Add any other needed colors -->
+    <color name="orange">#FF9800</color>
+    <color name="gray">#757575</color>
+    <color name="light_gray">#E0E0E0</color>
+
+    <!-- Status colors -->
+    <color name="success_green">#4CAF50</color>
+    <color name="warning_orange">#FF9800</color>
+    <color name="error_red">#F44336</color>
 </resources>
