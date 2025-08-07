@@ -21,8 +21,7 @@ class CreateOperatorsActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
 
         val nameField = findViewById<EditText>(R.id.NameEditText)
-        val locationField = findViewById<EditText>(R.id.locationEditText)
-        val locationIdField = findViewById<EditText>(R.id.locationIdEditText)
+        val NICField = findViewById<EditText>(R.id.nicEditText)
         val emailField = findViewById<EditText>(R.id.emailEditText)
         val passwordField = findViewById<EditText>(R.id.passwordEditText)
         val confirmButton = findViewById<Button>(R.id.confirmButton)
@@ -40,14 +39,18 @@ class CreateOperatorsActivity : AppCompatActivity() {
 
         confirmButton.setOnClickListener {
             val name = nameField.text.toString().trim()
-            val location = locationField.text.toString().trim()
-            val locationId = locationIdField.text.toString().trim()
+            val NIC = NICField.text.toString().trim()
             val email = emailField.text.toString().trim()
             val password = passwordField.text.toString().trim()
             val role = "Operator" // 🔐 Fixed role
 
-            if (name.isEmpty() || location.isEmpty() || locationId.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            if (name.isEmpty() || NIC.isEmpty() || email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (!isValidNIC(NIC)) {
+                Toast.makeText(this, "Invalid NIC format", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -62,8 +65,7 @@ class CreateOperatorsActivity : AppCompatActivity() {
                         "username" to generatedUsername,
                         "name" to name,
                         "email" to email,
-                        "location" to location,
-                        "locationId" to locationId,
+                        "NIC" to NIC,
                         "role" to role,
                         "createdAt" to createdAt,
                         "createdBy" to (currentUser?.uid ?: "unknown")
@@ -73,8 +75,7 @@ class CreateOperatorsActivity : AppCompatActivity() {
                         .addOnSuccessListener {
                             Toast.makeText(this, "Operator account created!", Toast.LENGTH_LONG).show()
                             nameField.text.clear()
-                            locationField.text.clear()
-                            locationIdField.text.clear()
+                            NICField.text.clear()
                             emailField.text.clear()
                             passwordField.text.clear()
 
@@ -113,5 +114,12 @@ class CreateOperatorsActivity : AppCompatActivity() {
         backButton.setOnClickListener {
             finish()
         }
+    }
+
+    // ✅ NIC Validation: Old + New Format
+    private fun isValidNIC(nic: String): Boolean {
+        val oldNICPattern = Regex("^[0-9]{9}[vVxX]$")
+        val newNICPattern = Regex("^[0-9]{12}$")
+        return nic.matches(oldNICPattern) || nic.matches(newNICPattern)
     }
 }
