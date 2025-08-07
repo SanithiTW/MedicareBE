@@ -44,6 +44,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".controllers.ProfileController"
+            android:exported="false" />
+
+        <activity
             android:name=".controllers.ForgotPasswordController"
             android:exported="false" />
 

@@ -1,5 +1,6 @@
 package com.example.donorlk.controllers
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -71,12 +72,9 @@ class HomePageController : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.profile -> {
-                // Open OverviewFragment in the entire screen
-                supportFragmentManager.beginTransaction()
-                    .replace(android.R.id.content, OverviewFragment())
-                    .addToBackStack(null)
-                    .commit()
-                supportActionBar?.title = "Overview"
+                // Navigate to ProfileController
+                val intent = Intent(this, ProfileController::class.java)
+                startActivity(intent)
                 true
             }
             R.id.notification -> {
