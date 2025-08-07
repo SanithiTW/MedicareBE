@@ -81,6 +81,7 @@
             android:exported="false" />
 
         <activity android:name=".CreateOperatorsActivity" />
-        
+        <activity android:name=".controllers.OperatorDashboardController" />
+        <activity android:name=".SaveDonationsRecorderController" />
     </application>
 </manifest>
