@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // Start with LoginController
-        val intent = Intent(this, HomePageController::class.java)
+        val intent = Intent(this, LoginController::class.java)
         startActivity(intent)
 
         // Finish MainActivity so user cannot navigate back

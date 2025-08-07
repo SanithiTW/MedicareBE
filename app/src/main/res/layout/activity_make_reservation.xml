@@ -37,20 +37,32 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
+    <TextView
+        android:id="@+id/slotsLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
+        android:text="Available Time Slots"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/reservationTimeInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Select Time"
-            android:focusable="false"
-            android:clickable="true" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/timeSlotsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:id="@+id/noSlotsMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Please select a date to view available slots"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginVertical="32dp"
+        android:textColor="@android:color/darker_gray" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -71,9 +83,10 @@
         android:id="@+id/confirmReservationButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Confirm Reservation"
+        android:text="Make Reservation"
         android:textColor="@android:color/white"
         android:backgroundTint="@color/design_default_color_primary"
+        android:enabled="false"
         style="@style/Widget.Material3.Button" />
 
 </LinearLayout>
