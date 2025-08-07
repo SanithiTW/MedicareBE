@@ -1,5 +1,6 @@
 package com.example.donorlk
 
+import GmailSender
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +29,7 @@ class CreateAdminActivity : AppCompatActivity() {
         val confirmButton = findViewById<Button>(R.id.confirmButton)
         val backButton = findViewById<ImageView>(R.id.backButton)
 
-        val roles = arrayOf("Admin", "Sub Admin")
+        val roles = arrayOf("Super Admin", "Sub Admin")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, roles)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         roleSpinner.adapter = adapter
@@ -72,7 +73,8 @@ class CreateAdminActivity : AppCompatActivity() {
                         "locationId" to locationId,
                         "role" to role,
                         "createdAt" to createdAt,
-                        "createdBy" to currentUserRole
+                        "createdBy" to (currentUser?.uid ?: "unknown")
+
                     )
 
                     db.collection("users").document(uid).set(userMap)
@@ -84,7 +86,32 @@ class CreateAdminActivity : AppCompatActivity() {
                             emailField.text.clear()
                             passwordField.text.clear()
                             roleSpinner.setSelection(0)
+
+                            // After successful Firestore save
+                            val senderEmail = "donorlk.system@gmail.com"
+                            val senderPassword = "cwgp qczk zapa qzik" // 16-digit App Password from Gmail
+
+                            val subject = "DonorLK Admin Account Created"
+                            val body = """
+    Hello,
+
+    Your admin account has been created.
+
+    Email: $email
+    User Id: $uid
+    User Name: $generatedUsername
+    Password: $password
+
+    Please login to DonorLK using these credentials.
+
+    Regards,
+    DonorLK 
+""".trimIndent()
+
+                            GmailSender(senderEmail, senderPassword).sendEmail(email, subject, body)
+
                         }
+
                         .addOnFailureListener { e ->
                             Toast.makeText(this, "Firestore error: ${e.message}", Toast.LENGTH_LONG).show()
                         }
