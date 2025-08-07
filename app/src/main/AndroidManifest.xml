@@ -17,6 +17,11 @@
         android:theme="@style/Theme.DONORlk"
         tools:targetApi="31">
 
+        <!-- Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBLYt0igljosxuzRfPw-0x866mKXmfYdU8" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -65,6 +70,10 @@
 
         <activity
             android:name=".controllers.SubAdminHomeController"
+            android:exported="false" />
+
+        <activity
+            android:name=".controllers.MakeReservationActivity"
             android:exported="false" />
 
     </application>
