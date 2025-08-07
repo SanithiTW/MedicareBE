@@ -158,6 +158,12 @@ class MakeReservationActivity : AppCompatActivity() {
         noSlotsMessage = findViewById(R.id.noSlotsMessage)
         notesInput = findViewById(R.id.notesInput)
         confirmReservationButton = findViewById(R.id.confirmReservationButton)
+
+        // Setup back button
+        val backButton = findViewById<android.widget.ImageView>(R.id.backButton)
+        backButton.setOnClickListener {
+            finish()
+        }
     }
 
     private fun setupRecyclerView() {
@@ -236,8 +242,8 @@ class MakeReservationActivity : AppCompatActivity() {
         if (selectedDate == null || centerId == null) return
 
         // Show loading state
-        slotsLabel.visibility = View.GONE
-        timeSlotsRecyclerView.visibility = View.GONE
+        val timeSlotsCard = findViewById<com.google.android.material.card.MaterialCardView>(R.id.timeSlotsCard)
+        timeSlotsCard.visibility = View.GONE
         noSlotsMessage.text = "Loading available slots..."
         noSlotsMessage.visibility = View.VISIBLE
 
@@ -269,12 +275,12 @@ class MakeReservationActivity : AppCompatActivity() {
                 // Update UI
                 if (availableSlots.any { it.availableCount > 0 }) {
                     timeSlotAdapter.updateSlots(availableSlots)
-                    slotsLabel.visibility = View.VISIBLE
-                    timeSlotsRecyclerView.visibility = View.VISIBLE
+                    timeSlotsCard.visibility = View.VISIBLE
                     noSlotsMessage.visibility = View.GONE
                 } else {
                     noSlotsMessage.text = "No available slots for this date"
                     noSlotsMessage.visibility = View.VISIBLE
+                    timeSlotsCard.visibility = View.GONE
                 }
 
                 updateReservationButtonState()
@@ -283,6 +289,7 @@ class MakeReservationActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error loading slots: ${e.message}", Toast.LENGTH_SHORT).show()
                 noSlotsMessage.text = "Error loading slots"
                 noSlotsMessage.visibility = View.VISIBLE
+                timeSlotsCard.visibility = View.GONE
             }
     }
 

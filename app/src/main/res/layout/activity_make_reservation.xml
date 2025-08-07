@@ -1,92 +1,266 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/white"
+    tools:context=".controllers.MakeReservationActivity">
 
-    <TextView
-        android:id="@+id/centerNameTitle"
+    <!-- App Bar at the top -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Make Reservation"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp" />
+        android:background="#FFEDED"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/selectedCenterName"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_revert"
+                app:tint="@color/app_red"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="16dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Back" />
+
+            <TextView
+                android:id="@+id/centerNameTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Make Reservation"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/app_red"
+                android:layout_gravity="center"
+                android:layout_marginStart="56dp" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Main Content Area -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Selected Center: "
-        android:textSize="18sp"
-        android:layout_marginBottom="24dp" />
+        android:layout_height="0dp"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/reservationDateInput"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Select Date"
-            android:focusable="false"
-            android:clickable="true" />
+            android:orientation="vertical">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <!-- Selected Center Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:strokeColor="@color/app_red"
+                app:strokeWidth="1dp">
 
-    <TextView
-        android:id="@+id/slotsLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Available Time Slots"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/timeSlotsRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:visibility="gone" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Donation Center"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/app_red"
+                        android:layout_marginBottom="8dp" />
 
-    <TextView
-        android:id="@+id/noSlotsMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Please select a date to view available slots"
-        android:textSize="16sp"
-        android:gravity="center"
-        android:layout_marginVertical="32dp"
-        android:textColor="@android:color/darker_gray" />
+                    <TextView
+                        android:id="@+id/selectedCenterName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Selected Center: "
+                        android:textSize="18sp"
+                        android:textColor="@color/black" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp">
+                </LinearLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/notesInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Additional Notes (Optional)"
-            android:lines="3"
-            android:maxLines="3" />
+            </com.google.android.material.card.MaterialCardView>
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <!-- Date Selection Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:strokeColor="@color/app_red"
+                app:strokeWidth="1dp">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/confirmReservationButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Make Reservation"
-        android:textColor="@android:color/white"
-        android:backgroundTint="@color/design_default_color_primary"
-        android:enabled="false"
-        style="@style/Widget.Material3.Button" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-</LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Select Date"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/app_red"
+                        android:layout_marginBottom="12dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:boxStrokeColor="@color/app_red"
+                        app:hintTextColor="@color/app_red">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/reservationDateInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Select Date (Weekdays Only)"
+                            android:focusable="false"
+                            android:clickable="true"
+                            android:drawableEnd="@android:drawable/ic_menu_today"
+                            android:drawableTint="@color/app_red" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Time Slots Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/timeSlotsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:visibility="gone"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:strokeColor="@color/app_red"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/slotsLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Available Time Slots"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/app_red"
+                        android:layout_marginBottom="12dp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/timeSlotsRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- No Slots Message -->
+            <TextView
+                android:id="@+id/noSlotsMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Please select a date to view available slots"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_marginVertical="32dp"
+                android:textColor="@color/gray"
+                android:padding="24dp"
+                android:background="@drawable/rounded_background"
+                android:backgroundTint="@color/light_gray" />
+
+            <!-- Notes Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:strokeColor="@color/app_red"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Additional Notes"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/app_red"
+                        android:layout_marginBottom="12dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:boxStrokeColor="@color/app_red"
+                        app:hintTextColor="@color/app_red">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/notesInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Any special requirements or notes (Optional)"
+                            android:lines="3"
+                            android:maxLines="3"
+                            android:gravity="top" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Confirmation Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/confirmReservationButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Make Reservation"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/app_red"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:padding="16dp"
+                android:enabled="false"
+                app:cornerRadius="12dp"
+                app:elevation="4dp"
+                style="@style/Widget.Material3.Button" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
