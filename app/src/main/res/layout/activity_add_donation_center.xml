@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Donation Center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/app_red"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Center Name Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/centerNameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:boxStrokeColor="@color/app_red"
+            app:hintTextColor="@color/app_red"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            app:layout_constraintTop_toBottomOf="@id/titleText">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/centerNameInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Center Name"
+                android:inputType="text"
+                android:textColor="@color/black"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Location Section Title -->
+        <TextView
+            android:id="@+id/locationTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location Coordinates"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/app_red"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/centerNameLayout"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- Latitude Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/latitudeLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:boxStrokeColor="@color/app_red"
+            app:hintTextColor="@color/app_red"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            app:layout_constraintTop_toBottomOf="@id/locationTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/longitudeLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/latitudeInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Latitude"
+                android:inputType="numberDecimal|numberSigned"
+                android:textColor="@color/black"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Longitude Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/longitudeLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            app:boxStrokeColor="@color/app_red"
+            app:hintTextColor="@color/app_red"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            app:layout_constraintTop_toBottomOf="@id/locationTitle"
+            app:layout_constraintStart_toEndOf="@id/latitudeLayout"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/longitudeInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Longitude"
+                android:inputType="numberDecimal|numberSigned"
+                android:textColor="@color/black"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Get Current Location Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/getCurrentLocationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Get Current Location"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/app_red"
+            android:drawableStart="@android:drawable/ic_menu_mylocation"
+            android:drawableTint="@color/white"
+            android:paddingVertical="12dp"
+            app:cornerRadius="8dp"
+            style="@style/Widget.Material3.Button"
+            app:layout_constraintTop_toBottomOf="@id/latitudeLayout"/>
+
+        <!-- Slot Limit Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/slotLimitLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:boxStrokeColor="@color/app_red"
+            app:hintTextColor="@color/app_red"
+            app:helperText="Maximum number of donors per session"
+            app:helperTextTextColor="@color/black"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            app:layout_constraintTop_toBottomOf="@id/getCurrentLocationButton">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/slotLimitInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Slot Limit Per Session"
+                android:inputType="number"
+                android:textColor="@color/black"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Save Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Save Donation Center"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:backgroundTint="@color/app_red"
+            android:paddingVertical="16dp"
+            app:cornerRadius="8dp"
+            style="@style/Widget.Material3.Button"
+            app:layout_constraintTop_toBottomOf="@id/slotLimitLayout"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
