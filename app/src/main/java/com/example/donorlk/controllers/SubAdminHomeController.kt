@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import com.example.donorlk.CreateOperatorsActivity
 import com.example.donorlk.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,6 +18,7 @@ class SubAdminHomeController : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private lateinit var donationCenterCard: CardView
+    private lateinit var createOperatorCard: CardView
     private lateinit var reservationsCard: CardView
     private lateinit var reportsCard: CardView
     private lateinit var welcomeText: TextView
@@ -43,6 +45,7 @@ class SubAdminHomeController : AppCompatActivity() {
     private fun initializeViews() {
         donationCenterCard = findViewById(R.id.donationCenterCard)
         reservationsCard = findViewById(R.id.reservationsCard)
+        createOperatorCard = findViewById(R.id.createOperatorCard)
         reportsCard = findViewById(R.id.reportsCard)
         welcomeText = findViewById(R.id.welcomeText)
         logoutContainer = findViewById(R.id.logoutContainer)
@@ -54,6 +57,12 @@ class SubAdminHomeController : AppCompatActivity() {
             val intent = Intent(this, AddDonationCenterActivity::class.java)
             startActivity(intent)
         }
+        // Donation Center Card - Navigate to Add/Edit Donation Center
+        createOperatorCard.setOnClickListener {
+            val intent = Intent(this, CreateOperatorsActivity::class.java)
+            startActivity(intent)
+        }
+
 
         // Reservations Card - Navigate to Reservations Management
         reservationsCard.setOnClickListener {

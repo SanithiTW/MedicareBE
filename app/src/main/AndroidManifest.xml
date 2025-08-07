@@ -76,5 +76,7 @@
             android:name=".controllers.MakeReservationActivity"
             android:exported="false" />
 
+        <activity android:name=".CreateOperatorsActivity" />
+        
     </application>
 </manifest>

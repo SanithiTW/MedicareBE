@@ -240,7 +240,72 @@
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
+            <!-- Create Operators Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/createOperatorCard"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="6dp">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:background="#4CAFAA"
+                    android:padding="20dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:src="@android:drawable/ic_menu_manage"
+                        app:tint="@color/white"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="Report icon" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Create Operators"
+                            android:textSize="20sp"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Register Nurses"
+                            android:textSize="14sp"
+                            android:textColor="@color/white"
+                            android:alpha="0.9" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/ic_menu_send"
+                        app:tint="@color/white"
+                        android:rotation="180"
+                        android:contentDescription="Arrow icon" />
+
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
             <!-- Reports Card -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/reportsCard"
@@ -302,7 +367,9 @@
                         android:rotation="180"
                         android:contentDescription="Arrow icon" />
 
+
                 </LinearLayout>
+
 
             </androidx.cardview.widget.CardView>
 
