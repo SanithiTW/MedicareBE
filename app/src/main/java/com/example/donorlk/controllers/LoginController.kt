@@ -274,10 +274,7 @@ class LoginController : BaseActivity() {
                 startActivity(Intent(this, HomePageController::class.java))
                 finish()
             }
-            "admin" -> {
-                startActivity(Intent(this, AdminDashboardController::class.java))
-                finish()
-            }
+
             "sub admin" -> {
                 startActivity(Intent(this, SubAdminHomeController::class.java))
                 finish()

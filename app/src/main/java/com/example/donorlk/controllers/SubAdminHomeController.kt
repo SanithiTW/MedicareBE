@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import com.example.donorlk.CreateOperatorsActivity
 import com.example.donorlk.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,8 +18,7 @@ class SubAdminHomeController : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private lateinit var donationCenterCard: CardView
-    private lateinit var reservationsCard: CardView
-    private lateinit var reportsCard: CardView
+    private lateinit var createOperatorCard: CardView
     private lateinit var welcomeText: TextView
     private lateinit var logoutContainer: LinearLayout
 
@@ -42,8 +42,7 @@ class SubAdminHomeController : AppCompatActivity() {
 
     private fun initializeViews() {
         donationCenterCard = findViewById(R.id.donationCenterCard)
-        reservationsCard = findViewById(R.id.reservationsCard)
-        reportsCard = findViewById(R.id.reportsCard)
+        createOperatorCard = findViewById(R.id.createOperatorCard)
         welcomeText = findViewById(R.id.welcomeText)
         logoutContainer = findViewById(R.id.logoutContainer)
     }
@@ -54,17 +53,10 @@ class SubAdminHomeController : AppCompatActivity() {
             val intent = Intent(this, AddDonationCenterActivity::class.java)
             startActivity(intent)
         }
-
-        // Reservations Card - Navigate to Reservations Management
-        reservationsCard.setOnClickListener {
-            // TODO: Create ReservationsManagementActivity
-            Toast.makeText(this, "Reservations Management - Coming Soon!", Toast.LENGTH_SHORT).show()
-        }
-
-        // Reports Card - Navigate to Reports
-        reportsCard.setOnClickListener {
-            // TODO: Create ReportsActivity
-            Toast.makeText(this, "Reports - Coming Soon!", Toast.LENGTH_SHORT).show()
+        // Create operator Card - Navigate to Add/Edit Donation Center
+        createOperatorCard.setOnClickListener {
+            val intent = Intent(this, CreateOperatorsActivity::class.java)
+            startActivity(intent)
         }
 
         // Logout Container - Handle logout

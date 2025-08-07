@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Create Sub Admins"
+                android:text="Create Operators"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000"
@@ -64,54 +64,23 @@
                 android:padding="12dp"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- Role -->
+            <!-- NID -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Role"
-                android:textColor="#000000"/>
-            <Spinner
-                android:id="@+id/roleSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@drawable/rounded_edittext"
-                android:layout_marginBottom="16dp"
-                android:textColor="#000000"/>
-
-
-            <!-- Location -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Location"
+                android:text="National ID Card Number"
                 android:textColor="#000000"/>
             <EditText
-                android:id="@+id/locationEditText"
+                android:id="@+id/nicEditText"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:hint="Enter location"
+                android:hint="Enter NIC"
                 android:background="@drawable/rounded_edittext"
                 android:textColor="#000000"
                 android:textColorHint="#999999"
                 android:padding="12dp"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- Location ID -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Location ID"
-                android:textColor="#000000"/>
-            <EditText
-                android:id="@+id/locationIdEditText"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Enter location ID"
-                android:background="@drawable/rounded_edittext"
-                android:textColor="#000000"
-                android:textColorHint="#999999"
-                android:padding="12dp"
-                android:layout_marginBottom="16dp"/>
 
 
             <!-- Email -->
