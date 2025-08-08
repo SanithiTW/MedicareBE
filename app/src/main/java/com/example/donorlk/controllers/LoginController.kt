@@ -283,6 +283,10 @@ class LoginController : BaseActivity() {
                 startActivity(Intent(this, AdminDashboardController::class.java))
                 finish()
             }
+            "operator" -> {
+                startActivity(Intent(this, OperatorDashboardController::class.java))
+                finish()
+            }
             else -> {
                 // Default to donator home page if role is unknown
                 startActivity(Intent(this, HomePageController::class.java))
