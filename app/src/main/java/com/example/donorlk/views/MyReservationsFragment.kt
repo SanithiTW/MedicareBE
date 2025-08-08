@@ -56,6 +56,7 @@ class MyReservationsFragment : Fragment() {
 
         db.collection("reservations")
             .whereEqualTo("userId", currentUserId)
+            .whereEqualTo("status", "pending") // Only show pending reservations
             .get()
             .addOnSuccessListener { documents ->
                 val reservations = mutableListOf<Reservation>()
