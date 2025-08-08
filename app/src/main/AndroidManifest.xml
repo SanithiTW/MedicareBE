@@ -83,5 +83,7 @@
         <activity android:name=".CreateOperatorsActivity" />
         <activity android:name=".controllers.OperatorDashboardController" />
         <activity android:name=".SaveDonationsRecorderController" />
+        <activity android:name=".controllers.EditAdminActivity" />
+        <activity android:name=".controllers.EditOperatorController" />
     </application>
 </manifest>
