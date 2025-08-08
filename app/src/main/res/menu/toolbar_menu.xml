@@ -14,5 +14,11 @@
         android:title="New Page"
         android:orderInCategory="100"
         app:showAsAction="always" />
-</menu>
 
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/ic_logout"
+        android:title="Logout"
+        android:orderInCategory="101"
+        app:showAsAction="always" />
+</menu>

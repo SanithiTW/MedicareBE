@@ -11,6 +11,7 @@ import com.example.donorlk.views.OverviewFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.view.Menu
 import android.view.MenuItem
+import com.google.firebase.auth.FirebaseAuth
 
 class HomePageController : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,6 +86,15 @@ class HomePageController : BaseActivity() {
                     .addToBackStack(null)
                     .commit()
                 supportActionBar?.title = "Overview"
+                true
+            }
+            R.id.logout -> {
+                // Handle logout
+                FirebaseAuth.getInstance().signOut()
+                val intent = Intent(this, LoginController::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)
