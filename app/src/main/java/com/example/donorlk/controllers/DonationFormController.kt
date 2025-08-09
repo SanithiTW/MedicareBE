@@ -73,21 +73,43 @@ class DonationFormController : BaseActivity() {
                 return@setOnClickListener
             }
 
-            // Check if all answers match expected answers
-            val allAnswersCorrect = questions.all { question ->
-                question.answer == expectedAnswers[question.id]
+            // Check each answer and collect reasons for ineligibility
+            val ineligibilityReasons = mutableListOf<String>()
+
+            questions.forEach { question ->
+                val expectedAnswer = expectedAnswers[question.id]
+                if (question.answer != expectedAnswer) {
+                    val reason = when (question.id) {
+                        1 -> "You must be between 18-60 years of age"
+                        2 -> "Your weight must be above 50kg"
+                        3 -> "You need to have adequate sleep"
+                        4 -> "You cannot donate if you had major surgery in last 6 months"
+                        5 -> "You cannot donate if you are on medications"
+                        6 -> "You cannot donate if you consumed alcohol in last 24 hours"
+                        7 -> "You cannot donate if you had tattoos/piercings in last 6 months"
+                        8 -> "You cannot donate if you have chronic medical conditions"
+                        9 -> "You must wait 3 months between donations"
+                        10 -> "You must be feeling healthy and well"
+                        else -> "Ineligible based on question ${question.id}"
+                    }
+                    ineligibilityReasons.add(reason)
+                }
             }
 
-            if (!allAnswersCorrect) {
-                Toast.makeText(
-                    this,
-                    "You are not eligible for donations. Please meet officer for more details.",
-                    Toast.LENGTH_LONG
-                ).show()
+            if (ineligibilityReasons.isNotEmpty()) {
+                // Create a dialog to show the reasons
+                val dialog = android.app.AlertDialog.Builder(this)
+                    .setTitle("Donation Eligibility Results")
+                    .setMessage("You are not eligible to donate for the following reasons:\n\n• ${ineligibilityReasons.joinToString("\n• ")}\n\nPlease meet an officer for more details.")
+                    .setPositiveButton("OK") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .create()
+                dialog.show()
                 return@setOnClickListener
             }
 
-            // Get current user
+            // If eligible, continue with saving to Firebase
             val currentUser = FirebaseAuth.getInstance().currentUser
             if (currentUser == null) {
                 Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show()
