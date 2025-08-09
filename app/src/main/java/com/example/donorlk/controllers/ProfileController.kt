@@ -1,13 +1,19 @@
 package com.example.donorlk.controllers
 
+import android.Manifest
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.donorlk.R
 import com.example.donorlk.models.User
 import com.google.firebase.auth.FirebaseAuth
@@ -36,6 +42,8 @@ class ProfileController : BaseActivity() {
     private var currentUser: User? = null
     private val imageFileName = "profile_image.png"
     private val IMAGE_REQUEST_CODE = 1001
+    private val CAMERA_REQUEST_CODE = 1002
+    private val CAMERA_PERMISSION_CODE = 1003
 
     private val cityArrays = mapOf(
         "Western Province" to R.array.western_cities,
@@ -104,9 +112,127 @@ class ProfileController : BaseActivity() {
         }
 
         profileImageView.setOnClickListener {
-            openImagePicker()
+            showImagePickOptions()
         }
     }
+
+    // New function: show dialog with options to pick image from gallery or camera
+    private fun showImagePickOptions() {
+        val options = arrayOf("Choose from Gallery", "Take Photo")
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setTitle("Set Profile Picture")
+        builder.setItems(options) { _, which ->
+            when (which) {
+                0 -> openImagePicker() // existing gallery picker
+                1 -> checkCameraPermissionAndOpenCamera() // new camera option
+            }
+        }
+        builder.show()
+    }
+
+    // New function: Check camera permission, request if needed, else open camera
+    private fun checkCameraPermissionAndOpenCamera() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_CODE)
+        } else {
+            openCamera()
+        }
+    }
+
+    // New function: Start camera intent
+    private fun openCamera() {
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (cameraIntent.resolveActivity(packageManager) != null) {
+            startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE)
+        } else {
+            Toast.makeText(this, "No camera app found", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // New override: Handle permission result for camera
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera()
+            } else {
+                Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    // Existing function unchanged
+    private fun openImagePicker() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, IMAGE_REQUEST_CODE)
+    }
+
+    // Updated override: handle both gallery and camera results
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                IMAGE_REQUEST_CODE -> {
+                    val imageUri: Uri? = data?.data
+                    if (imageUri != null) {
+                        profileImageView.setImageURI(imageUri)
+                        saveImageToInternalStorage(imageUri)
+                    }
+                }
+                CAMERA_REQUEST_CODE -> {
+                    val photoBitmap = data?.extras?.get("data") as? Bitmap
+                    if (photoBitmap != null) {
+                        profileImageView.setImageBitmap(photoBitmap)
+                        saveBitmapToInternalStorage(photoBitmap)
+                    }
+                }
+            }
+        }
+    }
+
+    // New helper function to save Bitmap from camera to internal storage
+    private fun saveBitmapToInternalStorage(bitmap: Bitmap) {
+        try {
+            val file = File(filesDir, imageFileName)
+            val outputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            outputStream.close()
+        } catch (e: Exception) {
+            Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // Existing function unchanged
+    private fun saveImageToInternalStorage(uri: Uri) {
+        try {
+            val inputStream = contentResolver.openInputStream(uri)
+            val file = File(filesDir, imageFileName)
+            val outputStream = FileOutputStream(file)
+            inputStream?.copyTo(outputStream)
+            inputStream?.close()
+            outputStream.close()
+        } catch (e: Exception) {
+            Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // Existing function unchanged
+    private fun loadImageFromInternalStorage() {
+        try {
+            val file = File(filesDir, imageFileName)
+            if (file.exists()) {
+                val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                profileImageView.setImageBitmap(bitmap)
+            } else {
+                profileImageView.setImageResource(R.drawable.ic_person)
+            }
+        } catch (e: Exception) {
+            profileImageView.setImageResource(R.drawable.ic_person)
+        }
+    }
+
+    // --- All your original functions below unchanged (copied exactly) ---
 
     private fun setupSpinners() {
         ArrayAdapter.createFromResource(
@@ -321,49 +447,5 @@ class ProfileController : BaseActivity() {
                 nextButton.text = "Save"
                 Toast.makeText(this, "Failed to update profile: ${e.message}", Toast.LENGTH_LONG).show()
             }
-    }
-
-    private fun openImagePicker() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        startActivityForResult(intent, IMAGE_REQUEST_CODE)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            val imageUri: Uri? = data.data
-            if (imageUri != null) {
-                profileImageView.setImageURI(imageUri)
-                saveImageToInternalStorage(imageUri)
-            }
-        }
-    }
-
-    private fun saveImageToInternalStorage(uri: Uri) {
-        try {
-            val inputStream = contentResolver.openInputStream(uri)
-            val file = File(filesDir, imageFileName)
-            val outputStream = FileOutputStream(file)
-            inputStream?.copyTo(outputStream)
-            inputStream?.close()
-            outputStream.close()
-        } catch (e: Exception) {
-            Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun loadImageFromInternalStorage() {
-        try {
-            val file = File(filesDir, imageFileName)
-            if (file.exists()) {
-                val bitmap = BitmapFactory.decodeFile(file.absolutePath)
-                profileImageView.setImageBitmap(bitmap)
-            } else {
-                profileImageView.setImageResource(R.drawable.ic_person)
-            }
-        } catch (e: Exception) {
-            profileImageView.setImageResource(R.drawable.ic_person)
-        }
     }
 }
