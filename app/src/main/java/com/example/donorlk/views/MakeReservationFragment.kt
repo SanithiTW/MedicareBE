@@ -153,11 +153,6 @@ class MakeReservationFragment : Fragment(), OnMapReadyCallback {
         db.collection("donation_centers")
             .get()
             .addOnSuccessListener { documents ->
-                val allMarkers = mutableListOf<LatLng>()
-                val nearbyMarkersFor25kmZoom = mutableListOf<LatLng>()
-                val maxDistance = 25.0 // 25 km radius for zoom calculation
-                var centersWithin25km = 0
-
                 // Clear any existing markers first
                 googleMap.clear()
 
@@ -170,79 +165,33 @@ class MakeReservationFragment : Fragment(), OnMapReadyCallback {
                     if (centerName != null && latitude != null && longitude != null) {
                         val centerLocation = LatLng(latitude, longitude)
 
-                        // Calculate distance from user location
-                        val distance = calculateDistance(userLocation, centerLocation)
-
-                        // Add marker for ALL centers (not just nearby ones)
+                        // Add marker for ALL centers
                         val marker = googleMap.addMarker(
                             MarkerOptions()
                                 .position(centerLocation)
                                 .title(centerName)
-                                .snippet("Distance: ${String.format("%.1f", distance)} km")
+                                .snippet("Tap to make a reservation")
                         )
 
                         marker?.tag = document.id
-                        allMarkers.add(centerLocation)
-
-                        // Keep track of centers within 25km for zoom calculation
-                        if (distance <= maxDistance) {
-                            nearbyMarkersFor25kmZoom.add(centerLocation)
-                            centersWithin25km++
-                        }
                     }
                 }
 
-                // Always zoom to show 25km radius around user, regardless of markers
-                zoomToShow25kmRadius(userLocation, nearbyMarkersFor25kmZoom)
+                // Just zoom to 25km area around user location
+                zoomTo25kmAroundUser(userLocation)
 
-                if (centersWithin25km > 0) {
-                    Toast.makeText(requireContext(), "Showing all ${allMarkers.size} centers. $centersWithin25km centers within 25km", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(requireContext(), "Showing all ${allMarkers.size} centers. No centers within 25km of your location", Toast.LENGTH_LONG).show()
-                }
+                Toast.makeText(requireContext(), "${documents.size()} donation centers loaded", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { e ->
                 Toast.makeText(requireContext(), "Failed to load donation centers: ${e.message}", Toast.LENGTH_LONG).show()
                 // Fallback to show area around user location
-                zoomToShow25kmRadius(userLocation, emptyList())
+                zoomTo25kmAroundUser(userLocation)
             }
     }
 
-    private fun zoomToShow25kmRadius(userLocation: LatLng, nearbyMarkers: List<LatLng>) {
-        // Create a bounding box that represents approximately 25km radius
-        val radiusInDegrees = 0.225 // Approximately 25km in degrees (latitude/longitude)
-
-        val bounds = LatLngBounds.Builder()
-
-        // Add points around the user location to create a 25km radius view
-        bounds.include(LatLng(userLocation.latitude + radiusInDegrees, userLocation.longitude + radiusInDegrees))
-        bounds.include(LatLng(userLocation.latitude + radiusInDegrees, userLocation.longitude - radiusInDegrees))
-        bounds.include(LatLng(userLocation.latitude - radiusInDegrees, userLocation.longitude + radiusInDegrees))
-        bounds.include(LatLng(userLocation.latitude - radiusInDegrees, userLocation.longitude - radiusInDegrees))
-
-        // Also include the nearby markers if any
-        for (marker in nearbyMarkers) {
-            bounds.include(marker)
-        }
-
-        // Include user location
-        bounds.include(userLocation)
-
-        try {
-            val padding = 100 // Padding in pixels
-            googleMap.animateCamera(
-                CameraUpdateFactory.newLatLngBounds(bounds.build(), padding),
-                2000,
-                null
-            )
-        } catch (e: Exception) {
-            // Fallback to a standard zoom level that shows ~25km area
-            googleMap.animateCamera(
-                CameraUpdateFactory.newLatLngZoom(userLocation, 11f), // 11f shows roughly 25-30km area
-                2000,
-                null
-            )
-        }
+    private fun zoomTo25kmAroundUser(userLocation: LatLng) {
+        // Just move directly to 25km view without any animation to avoid "from space" effect
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 11f))
     }
 
     private fun loadAllCenters() {
@@ -286,45 +235,6 @@ class MakeReservationFragment : Fragment(), OnMapReadyCallback {
             }
     }
 
-    // Calculate distance between two points in kilometers
-    private fun calculateDistance(start: LatLng, end: LatLng): Double {
-        val results = FloatArray(1)
-        android.location.Location.distanceBetween(
-            start.latitude, start.longitude,
-            end.latitude, end.longitude,
-            results
-        )
-        return (results[0] / 1000).toDouble() // Convert meters to kilometers
-    }
-
-    private fun zoomToShowNearbyMarkers(markerPositions: List<LatLng>) {
-        if (markerPositions.isEmpty()) return
-
-        val builder = LatLngBounds.Builder()
-        for (position in markerPositions) {
-            builder.include(position)
-        }
-
-        val bounds = builder.build()
-        val padding = 150 // More padding for nearby view
-
-        try {
-            googleMap.animateCamera(
-                CameraUpdateFactory.newLatLngBounds(bounds, padding),
-                2000,
-                null
-            )
-        } catch (e: Exception) {
-            // Fallback to first marker with closer zoom
-            if (markerPositions.isNotEmpty()) {
-                googleMap.animateCamera(
-                    CameraUpdateFactory.newLatLngZoom(markerPositions[0], 13f),
-                    1500,
-                    null
-                )
-            }
-        }
-    }
 
     private fun zoomToShowAllMarkers(markerPositions: List<LatLng>) {
         if (markerPositions.isEmpty()) return
