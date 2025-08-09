@@ -153,13 +153,15 @@ class MakeReservationFragment : Fragment(), OnMapReadyCallback {
         db.collection("donation_centers")
             .get()
             .addOnSuccessListener { documents ->
-                val nearbyMarkers = mutableListOf<LatLng>()
-                val maxDistance = 25.0 // 25 km radius
-                var centersFound = 0
+                val allMarkers = mutableListOf<LatLng>()
+                val nearbyMarkersFor25kmZoom = mutableListOf<LatLng>()
+                val maxDistance = 25.0 // 25 km radius for zoom calculation
+                var centersWithin25km = 0
 
                 // Clear any existing markers first
                 googleMap.clear()
 
+                // Add ALL centers to the map
                 for (document in documents) {
                     val centerName = document.getString("centerName")
                     val latitude = document.getDouble("latitude")
@@ -171,30 +173,32 @@ class MakeReservationFragment : Fragment(), OnMapReadyCallback {
                         // Calculate distance from user location
                         val distance = calculateDistance(userLocation, centerLocation)
 
-                        if (distance <= maxDistance) {
-                            // This center is within range
-                            val marker = googleMap.addMarker(
-                                MarkerOptions()
-                                    .position(centerLocation)
-                                    .title(centerName)
-                                    .snippet("Distance: ${String.format("%.1f", distance)} km")
-                            )
+                        // Add marker for ALL centers (not just nearby ones)
+                        val marker = googleMap.addMarker(
+                            MarkerOptions()
+                                .position(centerLocation)
+                                .title(centerName)
+                                .snippet("Distance: ${String.format("%.1f", distance)} km")
+                        )
 
-                            marker?.tag = document.id
-                            nearbyMarkers.add(centerLocation)
-                            centersFound++
+                        marker?.tag = document.id
+                        allMarkers.add(centerLocation)
+
+                        // Keep track of centers within 25km for zoom calculation
+                        if (distance <= maxDistance) {
+                            nearbyMarkersFor25kmZoom.add(centerLocation)
+                            centersWithin25km++
                         }
                     }
                 }
 
-                if (nearbyMarkers.isNotEmpty()) {
-                    // Show area that covers 25km radius around user
-                    zoomToShow25kmRadius(userLocation, nearbyMarkers)
-                    Toast.makeText(requireContext(), "$centersFound nearby centers found within 25km", Toast.LENGTH_SHORT).show()
+                // Always zoom to show 25km radius around user, regardless of markers
+                zoomToShow25kmRadius(userLocation, nearbyMarkersFor25kmZoom)
+
+                if (centersWithin25km > 0) {
+                    Toast.makeText(requireContext(), "Showing all ${allMarkers.size} centers. $centersWithin25km centers within 25km", Toast.LENGTH_SHORT).show()
                 } else {
-                    // No nearby centers, zoom to show 25km radius area around user
-                    zoomToShow25kmRadius(userLocation, emptyList())
-                    Toast.makeText(requireContext(), "No donation centers found within 25km of your location", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Showing all ${allMarkers.size} centers. No centers within 25km of your location", Toast.LENGTH_LONG).show()
                 }
             }
             .addOnFailureListener { e ->
