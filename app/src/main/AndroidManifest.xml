@@ -5,6 +5,7 @@
     <!-- Location permissions for getting current location -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +18,15 @@
         android:theme="@style/Theme.DONORlk"
         tools:targetApi="31">
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
         <!-- Google Maps API Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -83,5 +93,7 @@
         <activity android:name=".CreateOperatorsActivity" />
         <activity android:name=".controllers.OperatorDashboardController" />
         <activity android:name=".SaveDonationsRecorderController" />
+        <activity android:name=".controllers.EditAdminActivity" />
+        <activity android:name=".controllers.EditOperatorController" />
     </application>
 </manifest>

@@ -127,7 +127,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    android:background="@color/app_red"
+                    android:background="#2196F3"
                     android:padding="20dp"
                     android:gravity="center_vertical">
 
@@ -176,7 +176,6 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Reservations Management Card -->
 
             <!-- Create Operators Card -->
             <androidx.cardview.widget.CardView
@@ -243,6 +242,72 @@
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
+
+            <!-- Donation Center Management Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/deleteOperatorCard"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:background="@color/app_red"
+                    android:padding="20dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:src="@android:drawable/ic_menu_delete"
+                        app:tint="@color/white"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="Location icon" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Manage Operators"
+                            android:textSize="20sp"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Delete the operators"
+                            android:textSize="14sp"
+                            android:textColor="@color/white"
+                            android:alpha="0.9" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/ic_menu_send"
+                        app:tint="@color/white"
+                        android:rotation="180"
+                        android:contentDescription="Arrow icon" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
 
 
         </LinearLayout>

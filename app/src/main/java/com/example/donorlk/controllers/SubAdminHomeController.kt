@@ -19,6 +19,7 @@ class SubAdminHomeController : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var donationCenterCard: CardView
     private lateinit var createOperatorCard: CardView
+    private lateinit var deleteOperatorCard: CardView
     private lateinit var welcomeText: TextView
     private lateinit var logoutContainer: LinearLayout
 
@@ -43,6 +44,7 @@ class SubAdminHomeController : AppCompatActivity() {
     private fun initializeViews() {
         donationCenterCard = findViewById(R.id.donationCenterCard)
         createOperatorCard = findViewById(R.id.createOperatorCard)
+        deleteOperatorCard = findViewById(R.id.deleteOperatorCard)
         welcomeText = findViewById(R.id.welcomeText)
         logoutContainer = findViewById(R.id.logoutContainer)
     }
@@ -56,6 +58,11 @@ class SubAdminHomeController : AppCompatActivity() {
         // Create operator Card - Navigate to Add/Edit Donation Center
         createOperatorCard.setOnClickListener {
             val intent = Intent(this, CreateOperatorsActivity::class.java)
+            startActivity(intent)
+        }
+
+        deleteOperatorCard.setOnClickListener {
+            val intent = Intent(this, EditOperatorController::class.java)
             startActivity(intent)
         }
 

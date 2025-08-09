@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:padding="12dp">
+
+    <!-- Sub Admin Name -->
+    <TextView
+        android:id="@+id/subAdminName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sub Admin Name"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
+
+    <!-- Delete Icon -->
+    <ImageView
+        android:id="@+id/deleteIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@android:drawable/ic_delete"
+        android:tint="#D50000"
+        android:contentDescription="Delete" />
+</RelativeLayout>
