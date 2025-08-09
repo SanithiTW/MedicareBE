@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.donorlk.R
 import com.example.donorlk.models.DonationModel
 
-class DonationAdapter(private val donations: List<DonationModel>) :
+class DonationAdapter(private var donations: MutableList<DonationModel>) :
     RecyclerView.Adapter<DonationAdapter.DonationViewHolder>() {
 
     class DonationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val amountTextView: TextView = view.findViewById(R.id.donationAmount)
         val titleTextView: TextView = view.findViewById(R.id.donationTitle)
         val dateTextView: TextView = view.findViewById(R.id.donationDate)
         val placeTextView: TextView = view.findViewById(R.id.donationPlace)
@@ -25,9 +26,16 @@ class DonationAdapter(private val donations: List<DonationModel>) :
 
     override fun onBindViewHolder(holder: DonationViewHolder, position: Int) {
         val donation = donations[position]
+        holder.amountTextView.text = "${donation.amount} ml"
         holder.titleTextView.text = donation.title
         holder.dateTextView.text = donation.date
         holder.placeTextView.text = donation.place
+    }
+
+    fun updateDonations(newDonations: List<DonationModel>) {
+        donations.clear()
+        donations.addAll(newDonations)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = donations.size
