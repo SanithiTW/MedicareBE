@@ -45,16 +45,42 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginBottom="16dp">
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:src="@drawable/ic_person"
-                    android:padding="18dp"
-                    android:background="@drawable/circle_light_red"
-                    android:contentDescription="Person Icon" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#DDDDDD"
+                    android:layout_marginBottom="24dp" />
+
+                <!-- Profile Image with Camera Icon Overlay -->
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="16dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profileImageView"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_person"
+                        android:contentDescription="Profile Image"
+                        android:scaleType="centerCrop" />
+
+                    <ImageView
+                        android:id="@+id/cameraIcon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="bottom|end"
+                        android:layout_margin="4dp"
+                        android:background="@drawable/circle_white"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_camera"
+                        android:contentDescription="Camera Icon" />
+                </FrameLayout>
+
             </LinearLayout>
 
             <!-- Section Header -->

@@ -1,6 +1,9 @@
 package com.example.donorlk.controllers
 
 import android.app.DatePickerDialog
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,9 +12,13 @@ import com.example.donorlk.R
 import com.example.donorlk.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 class ProfileController : BaseActivity() {
+
+    private lateinit var profileImageView: ImageView
     private lateinit var fullNameEditText: EditText
     private lateinit var mobileEditText: EditText
     private lateinit var dobEditText: EditText
@@ -27,6 +34,9 @@ class ProfileController : BaseActivity() {
     private lateinit var firestore: FirebaseFirestore
 
     private var currentUser: User? = null
+    private val imageFileName = "profile_image.png"
+    private val IMAGE_REQUEST_CODE = 1001
+
     private val cityArrays = mapOf(
         "Western Province" to R.array.western_cities,
         "Central Province" to R.array.central_cities,
@@ -43,20 +53,18 @@ class ProfileController : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        // Initialize Firebase
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-        // Initialize views
         initializeViews()
         setupSpinners()
         setupClickListeners()
-
-        // Load user data
         loadUserProfile()
+        loadImageFromInternalStorage()
     }
 
     private fun initializeViews() {
+        profileImageView = findViewById(R.id.profileImageView)
         fullNameEditText = findViewById(R.id.fullNameEditText)
         mobileEditText = findViewById(R.id.mobileEditText)
         dobEditText = findViewById(R.id.dobEditText)
@@ -68,7 +76,6 @@ class ProfileController : BaseActivity() {
         nextButton = findViewById(R.id.nextButton)
         backButton = findViewById(R.id.backButton)
 
-        // Change button text to "Save"
         nextButton.text = "Save"
     }
 
@@ -95,34 +102,29 @@ class ProfileController : BaseActivity() {
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
+
+        profileImageView.setOnClickListener {
+            openImagePicker()
+        }
     }
 
     private fun setupSpinners() {
-        // Setup Gender Spinner
         ArrayAdapter.createFromResource(
-            this,
-            R.array.gender_array,
-            android.R.layout.simple_spinner_item
+            this, R.array.gender_array, android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             genderSpinner.adapter = adapter
         }
 
-        // Setup Blood Group Spinner
         ArrayAdapter.createFromResource(
-            this,
-            R.array.blood_groups_array,
-            android.R.layout.simple_spinner_item
+            this, R.array.blood_groups_array, android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             bloodGroupSpinner.adapter = adapter
         }
 
-        // Setup Province Spinner
         ArrayAdapter.createFromResource(
-            this,
-            R.array.provinces_array,
-            android.R.layout.simple_spinner_item
+            this, R.array.provinces_array, android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             provinceSpinner.adapter = adapter
@@ -133,9 +135,7 @@ class ProfileController : BaseActivity() {
         val cityArrayId = cityArrays[province]
         if (cityArrayId != null) {
             ArrayAdapter.createFromResource(
-                this,
-                cityArrayId,
-                android.R.layout.simple_spinner_item
+                this, cityArrayId, android.R.layout.simple_spinner_item
             ).also { adapter ->
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 citySpinner.adapter = adapter
@@ -151,7 +151,6 @@ class ProfileController : BaseActivity() {
             return
         }
 
-        // Show loading state
         nextButton.isEnabled = false
         nextButton.text = "Loading..."
 
@@ -183,15 +182,12 @@ class ProfileController : BaseActivity() {
         dobEditText.setText(user.dateOfBirth)
         nicEditText.setText(user.nic)
 
-        // Set spinner selections
         setSpinnerSelection(genderSpinner, user.gender)
         setSpinnerSelection(bloodGroupSpinner, user.bloodGroup)
         setSpinnerSelection(provinceSpinner, user.province)
 
-        // Update city spinner based on province, then set city selection
         if (user.province.isNotEmpty()) {
             updateCitySpinner(user.province)
-            // Delay setting city selection to allow spinner to populate
             citySpinner.post {
                 setSpinnerSelection(citySpinner, user.city)
             }
@@ -213,7 +209,6 @@ class ProfileController : BaseActivity() {
     private fun showDatePicker() {
         val calendar = Calendar.getInstance()
 
-        // If DOB is already set, parse it to set initial date
         val currentDob = dobEditText.text.toString()
         if (currentDob.isNotEmpty()) {
             try {
@@ -221,31 +216,22 @@ class ProfileController : BaseActivity() {
                 if (parts.size == 3) {
                     calendar.set(parts[2].toInt(), parts[1].toInt() - 1, parts[0].toInt())
                 }
-            } catch (e: Exception) {
-                // Use current date if parsing fails
-            }
+            } catch (e: Exception) {}
         }
-
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         val datePickerDialog = DatePickerDialog(
             this,
             { _, selectedYear, selectedMonth, selectedDay ->
-                // Format the date as DD/MM/YYYY
                 val formattedDate = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear)
                 dobEditText.setText(formattedDate)
             },
-            year,
-            month,
-            day
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
         )
 
-        // Set maximum date to current date (can't select future dates)
         datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
 
-        // Set minimum date to 120 years ago (reasonable age limit)
         val minCalendar = Calendar.getInstance()
         minCalendar.add(Calendar.YEAR, -120)
         datePickerDialog.datePicker.minDate = minCalendar.timeInMillis
@@ -262,14 +248,11 @@ class ProfileController : BaseActivity() {
             mobileEditText.error = "Mobile number is required"
             return false
         }
-
-        // Validate mobile number format (Sri Lankan format)
         val mobile = mobileEditText.text.toString().trim()
         if (!mobile.matches(Regex("^[0-9]{10}$")) && !mobile.matches(Regex("^\\+94[0-9]{9}$"))) {
-            mobileEditText.error = "Enter a valid mobile number (10 digits or +94xxxxxxxxx)"
+            mobileEditText.error = "Enter a valid mobile number"
             return false
         }
-
         if (dobEditText.text.toString().isEmpty()) {
             dobEditText.error = "Date of birth is required"
             return false
@@ -278,29 +261,20 @@ class ProfileController : BaseActivity() {
             nicEditText.error = "NIC is required"
             return false
         }
-
-        // Validate NIC format (Sri Lankan NIC)
         val nic = nicEditText.text.toString().trim()
         if (!nic.matches(Regex("^[0-9]{9}[vVxX]$")) && !nic.matches(Regex("^[0-9]{12}$"))) {
-            nicEditText.error = "Enter a valid NIC (9 digits + V/X or 12 digits)"
+            nicEditText.error = "Enter a valid NIC"
             return false
         }
-
         return true
     }
 
     private fun updateProfile() {
-        val currentFirebaseUser = auth.currentUser
-        if (currentFirebaseUser == null) {
-            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
-            return
-        }
+        val currentFirebaseUser = auth.currentUser ?: return
 
-        // Show loading
         nextButton.isEnabled = false
         nextButton.text = "Saving..."
 
-        // Get all form data
         val fullName = fullNameEditText.text.toString().trim()
         val mobile = mobileEditText.text.toString().trim()
         val dob = dobEditText.text.toString().trim()
@@ -310,7 +284,6 @@ class ProfileController : BaseActivity() {
         val province = provinceSpinner.selectedItem?.toString() ?: ""
         val city = citySpinner.selectedItem?.toString() ?: ""
 
-        // Create updated user object, preserving existing data
         val updatedUser = currentUser?.copy(
             name = fullName,
             mobile = mobile,
@@ -335,23 +308,62 @@ class ProfileController : BaseActivity() {
             createdAt = System.currentTimeMillis()
         )
 
-        // Update in Firestore
         firestore.collection("users").document(currentFirebaseUser.uid)
             .set(updatedUser)
             .addOnSuccessListener {
-                Log.d("ProfileController", "Profile updated successfully")
                 currentUser = updatedUser
                 nextButton.isEnabled = true
                 nextButton.text = "Save"
-
                 Toast.makeText(this, "Profile updated successfully!", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { e ->
-                Log.w("ProfileController", "Error updating profile", e)
                 nextButton.isEnabled = true
                 nextButton.text = "Save"
-
                 Toast.makeText(this, "Failed to update profile: ${e.message}", Toast.LENGTH_LONG).show()
             }
+    }
+
+    private fun openImagePicker() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, IMAGE_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            val imageUri: Uri? = data.data
+            if (imageUri != null) {
+                profileImageView.setImageURI(imageUri)
+                saveImageToInternalStorage(imageUri)
+            }
+        }
+    }
+
+    private fun saveImageToInternalStorage(uri: Uri) {
+        try {
+            val inputStream = contentResolver.openInputStream(uri)
+            val file = File(filesDir, imageFileName)
+            val outputStream = FileOutputStream(file)
+            inputStream?.copyTo(outputStream)
+            inputStream?.close()
+            outputStream.close()
+        } catch (e: Exception) {
+            Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun loadImageFromInternalStorage() {
+        try {
+            val file = File(filesDir, imageFileName)
+            if (file.exists()) {
+                val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                profileImageView.setImageBitmap(bitmap)
+            } else {
+                profileImageView.setImageResource(R.drawable.ic_person)
+            }
+        } catch (e: Exception) {
+            profileImageView.setImageResource(R.drawable.ic_person)
+        }
     }
 }

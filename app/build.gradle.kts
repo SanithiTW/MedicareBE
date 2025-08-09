@@ -71,4 +71,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.material)
+
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+
 }
