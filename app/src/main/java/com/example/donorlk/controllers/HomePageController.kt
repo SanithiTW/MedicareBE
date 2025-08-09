@@ -78,16 +78,6 @@ class HomePageController : BaseActivity() {
                 startActivity(intent)
                 true
             }
-            R.id.notification -> {
-                // Handle notification click
-                // You can implement your notification logic here
-                supportFragmentManager.beginTransaction()
-                    .replace(android.R.id.content, MyReservationsFragment())
-                    .addToBackStack(null)
-                    .commit()
-                supportActionBar?.title = "Overview"
-                true
-            }
             R.id.logout -> {
                 // Handle logout
                 FirebaseAuth.getInstance().signOut()

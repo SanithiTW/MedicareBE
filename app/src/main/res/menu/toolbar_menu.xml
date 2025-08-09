@@ -9,13 +9,6 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/notification"
-        android:icon="@drawable/ic_notification_bell"
-        android:title="New Page"
-        android:orderInCategory="100"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/logout"
         android:icon="@drawable/ic_logout"
         android:title="Logout"
