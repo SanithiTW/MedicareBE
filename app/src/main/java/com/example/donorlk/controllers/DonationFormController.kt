@@ -8,10 +8,28 @@ import android.widget.Toast
 import com.example.donorlk.R
 import com.example.donorlk.adapters.DonationQuestionAdapter
 import com.example.donorlk.models.DonationQuestion
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Calendar
+import java.util.Locale
 
 class DonationFormController : BaseActivity() {
     private lateinit var questionsAdapter: DonationQuestionAdapter
     private val questions = mutableListOf<DonationQuestion>()
+
+    // Map of expected answers for each question ID
+    private val expectedAnswers = mapOf(
+        1 to true,   // "Are you between 18-60 years of age?" - Should be YES
+        2 to true,   // "Is your weight above 50kg?" - Should be YES
+        3 to true,   // "Have you had enough sleep last night?" - Should be YES
+        4 to false,  // "Have you had any major surgery in the last 6 months?" - Should be NO
+        5 to false,  // "Are you currently taking any medications?" - Should be NO
+        6 to false,  // "Have you consumed alcohol in the last 24 hours?" - Should be NO
+        7 to false,  // "Have you had any tattoos or piercings in the last 6 months?" - Should be NO
+        8 to false,  // "Do you have any chronic medical conditions?" - Should be NO
+        9 to false,  // "Have you donated blood in the last 3 months?" - Should be NO
+        10 to true   // "Are you feeling healthy and well today?" - Should be YES
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,19 +73,59 @@ class DonationFormController : BaseActivity() {
                 return@setOnClickListener
             }
 
-            // Check eligibility
-            val isEligible = checkEligibility()
-            val message = if (isEligible) "You are eligible to donate!" else "Sorry, you are not eligible to donate at this time."
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-        }
-    }
+            // Check if all answers match expected answers
+            val allAnswersCorrect = questions.all { question ->
+                question.answer == expectedAnswers[question.id]
+            }
 
-    private fun checkEligibility(): Boolean {
-        // Basic eligibility logic - can be customized based on specific requirements
-        return questions[0].answer == true && // Age requirement
-               questions[1].answer == true && // Weight requirement
-               questions[3].answer == false && // No recent surgery
-               questions[8].answer == false && // No chronic conditions
-               questions[9].answer == true     // Feeling healthy today
+            if (!allAnswersCorrect) {
+                Toast.makeText(
+                    this,
+                    "You are not eligible for donations. Please meet officer for more details.",
+                    Toast.LENGTH_LONG
+                ).show()
+                return@setOnClickListener
+            }
+
+            // Get current user
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            if (currentUser == null) {
+                Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Format current date and time
+            val calendar = Calendar.getInstance()
+            val formattedDate = String.format(
+                Locale.ENGLISH,
+                "%04d-%02d-%02d %02d:%02d:%02d",
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1,
+                calendar.get(Calendar.DAY_OF_MONTH),
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                calendar.get(Calendar.SECOND)
+            )
+
+            // Save form submission date to user's document
+            val firestore = FirebaseFirestore.getInstance()
+            firestore.collection("users").document(currentUser.uid)
+                .update("lastFormSubmission", formattedDate)
+                .addOnSuccessListener {
+                    Toast.makeText(
+                        this,
+                        "You are eligible to donate! Form submitted successfully.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    finish() // Close the form activity
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(
+                        this,
+                        "Error saving form: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+        }
     }
 }
