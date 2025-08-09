@@ -142,7 +142,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Book Donation"
+                            android:text="Donation Form"
                             android:textSize="20sp"
                             android:textColor="@color/white"
                             android:textStyle="bold"/>
@@ -150,7 +150,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Schedule your blood donation appointment"
+                            android:text="Fill this form to check your eligibility"
                             android:textSize="14sp"
                             android:textColor="@color/white"
                             android:layout_marginTop="4dp"/>
