@@ -8,6 +8,8 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.Timestamp
 import android.widget.ImageView
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SaveDonationsRecorderController : AppCompatActivity() {
 
@@ -17,35 +19,34 @@ class SaveDonationsRecorderController : AppCompatActivity() {
     private lateinit var reservationContainer: LinearLayout
     private lateinit var donationAmount: EditText
     private lateinit var confirmDonation: Button
+    private lateinit var cancelDonation: Button
+    private lateinit var donationSection: LinearLayout
 
     private var selectedReservationId: String? = null
     private var selectedUserId: String? = null
+    private var lastFormSubmissionValid: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_save_donation_records)
 
-        // Initialize Firestore
         db = FirebaseFirestore.getInstance()
 
-        // Bind UI
         nicInput = findViewById(R.id.nicInput)
         searchButton = findViewById(R.id.searchButton)
         reservationContainer = findViewById(R.id.reservationContainer)
         donationAmount = findViewById(R.id.donationAmount)
         confirmDonation = findViewById(R.id.confirmDonation)
+        cancelDonation = findViewById(R.id.cancelDonation)
+        donationSection = findViewById(R.id.donationSection)
 
-        // Back button
         val backButton: ImageView = findViewById(R.id.backButton)
         backButton.setOnClickListener {
-            finish() // Go back to previous screen
+            finish()
         }
 
-        // Initially hide donation input UI
-        donationAmount.visibility = View.GONE
-        confirmDonation.visibility = View.GONE
+        donationSection.visibility = View.GONE
 
-        // Search button click
         searchButton.setOnClickListener {
             val nic = nicInput.text.toString().trim()
             if (nic.isEmpty()) {
@@ -57,20 +58,25 @@ class SaveDonationsRecorderController : AppCompatActivity() {
             }
         }
 
-        // Confirm donation click
         confirmDonation.setOnClickListener {
+            if (!lastFormSubmissionValid) {
+                showToast("Please fill the donation form before the donation")
+                return@setOnClickListener
+            }
             saveDonation()
+        }
+
+        cancelDonation.setOnClickListener {
+            resetForm()
         }
     }
 
-    // Validate NIC format
     private fun isValidNIC(nic: String): Boolean {
         val oldNicRegex = Regex("^[0-9]{9}[vVxX]$")
         val newNicRegex = Regex("^[0-9]{12}$")
         return oldNicRegex.matches(nic) || newNicRegex.matches(nic)
     }
 
-    // Search user and their pending reservations
     private fun searchNIC(nic: String) {
         db.collection("users")
             .whereEqualTo("nic", nic)
@@ -85,6 +91,22 @@ class SaveDonationsRecorderController : AppCompatActivity() {
                 val userId = user.id
                 selectedUserId = userId
 
+                // Validate lastFormSubmission
+                val lastFormStr = user.getString("lastFormSubmission")
+                lastFormSubmissionValid = false
+
+                if (!lastFormStr.isNullOrEmpty()) {
+                    try {
+                        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                        val parsedDate = formatter.parse(lastFormStr)
+                        val todayStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                        val lastFormDateStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(parsedDate)
+                        lastFormSubmissionValid = todayStr == lastFormDateStr
+                    } catch (e: Exception) {
+                        lastFormSubmissionValid = false
+                    }
+                }
+
                 db.collection("reservations")
                     .whereEqualTo("userId", userId)
                     .whereEqualTo("status", "pending")
@@ -92,8 +114,7 @@ class SaveDonationsRecorderController : AppCompatActivity() {
                     .addOnSuccessListener { reservations ->
                         reservationContainer.removeAllViews()
                         selectedReservationId = null
-                        donationAmount.visibility = View.GONE
-                        confirmDonation.visibility = View.GONE
+                        donationSection.visibility = View.GONE
 
                         if (reservations.isEmpty) {
                             showToast("No pending reservations for this user")
@@ -123,7 +144,6 @@ class SaveDonationsRecorderController : AppCompatActivity() {
             }
     }
 
-    // Create UI card for a reservation
     private fun createReservationCard(
         reservationId: String,
         centerName: String,
@@ -139,14 +159,17 @@ class SaveDonationsRecorderController : AppCompatActivity() {
 
         card.setOnClickListener {
             selectedReservationId = reservationId
-            donationAmount.visibility = View.VISIBLE
-            confirmDonation.visibility = View.VISIBLE
+            if (lastFormSubmissionValid) {
+                donationSection.visibility = View.VISIBLE
+            } else {
+                showToast("Please fill the donation form before the donation")
+                donationSection.visibility = View.GONE
+            }
         }
 
         return card
     }
 
-    // Save donation and update reservation
     private fun saveDonation() {
         val amountText = donationAmount.text.toString().trim()
         val amount = amountText.toIntOrNull()
@@ -172,7 +195,6 @@ class SaveDonationsRecorderController : AppCompatActivity() {
 
         db.collection("blood_donations").add(donation)
             .addOnSuccessListener {
-                // Update reservation status
                 db.collection("reservations").document(reservationId)
                     .update("status", "completed")
                     .addOnSuccessListener {
@@ -188,18 +210,15 @@ class SaveDonationsRecorderController : AppCompatActivity() {
             }
     }
 
-    // Reset form after save
     private fun resetForm() {
         nicInput.text.clear()
         donationAmount.text.clear()
-        donationAmount.visibility = View.GONE
-        confirmDonation.visibility = View.GONE
+        donationSection.visibility = View.GONE
         reservationContainer.removeAllViews()
         selectedReservationId = null
         selectedUserId = null
     }
 
-    // Show toast message
     private fun showToast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }

@@ -63,25 +63,49 @@
     </ScrollView>
 
     <!-- Donation Input Section -->
-    <EditText
-        android:id="@+id/donationAmount"
+    <LinearLayout
+        android:id="@+id/donationSection"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="Enter donated amount (ml)"
-        android:background="@drawable/rounded_edittext"
-        android:paddingHorizontal="12dp"
-        android:layout_marginTop="12dp"
-        android:inputType="number"
-        android:visibility="gone"
-        android:textColor="@color/black"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-    <Button
-        android:id="@+id/confirmDonation"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="Confirm Donation"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#4CAF50"
-        android:layout_marginTop="8dp"
-        android:visibility="gone"/>
+        <EditText
+            android:id="@+id/donationAmount"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Enter donated amount (ml)"
+            android:background="@drawable/rounded_edittext"
+            android:paddingHorizontal="12dp"
+            android:layout_marginTop="12dp"
+            android:inputType="number"
+            android:textColor="@color/black"/>
+
+        <Button
+            android:id="@+id/confirmDonation"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Confirm Donation"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#4CAF50"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/cancelDonation"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Cancel"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#FF4B4B"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/cancelDonationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:visibility="gone"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
 </LinearLayout>

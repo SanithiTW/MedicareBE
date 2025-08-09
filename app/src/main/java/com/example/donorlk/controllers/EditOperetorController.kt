@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.donorlk.R
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class EditOperatorController : AppCompatActivity() {
@@ -37,9 +38,21 @@ class EditOperatorController : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        fetchOperators() // Refresh operators list every time activity resumes
+    }
+
     private fun fetchOperators() {
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        if (currentUserUid == null) {
+            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         db.collection("users")
             .whereEqualTo("role", "Operator")
+            .whereEqualTo("createdBy", currentUserUid) // Filter by logged in user's UID
             .get()
             .addOnSuccessListener { result ->
                 operators.clear()
@@ -69,7 +82,6 @@ class EditOperatorController : AppCompatActivity() {
             val deleteIcon = view.findViewById<ImageView>(R.id.deleteIcon)
 
             nameText.text = operator.name
-
 
             deleteIcon.setOnClickListener {
                 AlertDialog.Builder(this@EditOperatorController)
