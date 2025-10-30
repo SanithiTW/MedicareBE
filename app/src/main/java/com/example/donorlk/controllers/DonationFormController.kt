@@ -28,7 +28,8 @@ class DonationFormController : BaseActivity() {
         7 to false,  // "Have you had any tattoos or piercings in the last 6 months?" - Should be NO
         8 to false,  // "Do you have any chronic medical conditions?" - Should be NO
         9 to false,  // "Have you donated blood in the last 3 months?" - Should be NO
-        10 to true   // "Are you feeling healthy and well today?" - Should be YES
+        10 to true,
+        11 to false // "Are you feeling healthy and well today?" - Should be YES
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +53,8 @@ class DonationFormController : BaseActivity() {
             DonationQuestion(7, "Have you had any tattoos or piercings in the last 6 months?"),
             DonationQuestion(8, "Do you have any chronic medical conditions?"),
             DonationQuestion(9, "Have you donated blood in the last 3 months?"),
-            DonationQuestion(10, "Are you feeling healthy and well today?")
+            DonationQuestion(10, "Are you feeling healthy and well today?"),
+            DonationQuestion(11, "Are you feeling healthy anipdqhiq?")
         ))
     }
 

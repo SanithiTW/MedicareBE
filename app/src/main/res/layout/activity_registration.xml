@@ -106,6 +106,16 @@
                 android:paddingHorizontal="12dp"
                 android:layout_marginBottom="24dp" />
 
+            <EditText
+                android:id="@+id/pNo"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="john@email.com"
+                android:inputType="textEmailAddress"
+                android:background="@drawable/rounded_edittext"
+                android:paddingHorizontal="12dp"
+                android:layout_marginBottom="16dp" />
+
             <!-- Register Button (changed text from Login to Register) -->
             <Button
                 android:id="@+id/loginButton"

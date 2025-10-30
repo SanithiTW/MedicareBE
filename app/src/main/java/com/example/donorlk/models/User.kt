@@ -12,5 +12,6 @@ data class User(
     val nic: String = "",
     val province: String = "",
     val city: String = "",
+    val pNo: String = "",
     val createdAt: Long = System.currentTimeMillis()
 )

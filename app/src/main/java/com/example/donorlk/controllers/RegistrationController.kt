@@ -17,6 +17,7 @@ class RegistrationController : BaseActivity() {
     private lateinit var googleLoginButton: Button
     private lateinit var loginPrompt: TextView
     private lateinit var backButton: ImageView
+    private lateinit var pNo: EditText
 
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
@@ -43,6 +44,7 @@ class RegistrationController : BaseActivity() {
         registerButton = findViewById(R.id.loginButton) // Note: ID is loginButton in layout
         googleLoginButton = findViewById(R.id.googleLoginButton)
         loginPrompt = findViewById(R.id.loginPrompt)
+        pNo = findViewById(R.id.pNo)
     }
 
     private fun setupClickListeners() {
@@ -70,6 +72,7 @@ class RegistrationController : BaseActivity() {
         val name = nameEditText.text.toString().trim()
         val email = emailEditText.text.toString().trim()
         val password = passwordEditText.text.toString().trim()
+        val pNo = pNo.text.toString().trim()
 
         // Show loading
         registerButton.isEnabled = false
@@ -87,6 +90,7 @@ class RegistrationController : BaseActivity() {
                             uid = user.uid,
                             name = name,
                             email = email,
+                            pNo = pNo,
                             role = "donator" // Default role for self-registration
                         )
 

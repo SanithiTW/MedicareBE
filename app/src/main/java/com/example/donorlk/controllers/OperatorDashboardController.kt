@@ -21,8 +21,13 @@ class OperatorDashboardController : AppCompatActivity() {
 
         val saveDonationsCard = findViewById<CardView>(R.id.saveDonationCard)
         val logoutContainer = findViewById<LinearLayout>(R.id.logoutContainer)
+        val viewDonation = findViewById<LinearLayout>(R.id.viewDonationCard)
 
         saveDonationsCard.setOnClickListener {
+            val intent = Intent(this, SaveDonationsRecorderController::class.java)
+            startActivity(intent)
+        }
+        viewDonation.setOnClickListener {
             val intent = Intent(this, SaveDonationsRecorderController::class.java)
             startActivity(intent)
         }
