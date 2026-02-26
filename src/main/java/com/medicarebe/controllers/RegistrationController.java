@@ -2,6 +2,7 @@ package com.medicarebe.controllers;
 
 import com.medicarebe.Service.FirebaseService;
 import com.google.firebase.auth.UserRecord;
+import com.medicarebe.Service.SupabaseStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,10 @@ public class RegistrationController {
 
     @Autowired
     private FirebaseService firebaseService;
+
+    @Autowired
+    private SupabaseStorageService supabaseStorageService;
+
 
     @GetMapping
     public String test() {
@@ -168,61 +173,163 @@ public class RegistrationController {
     public ResponseEntity<?> pharmacyStep1(@RequestBody Map<String, Object> payload) {
         try {
             payload.put("role", "Pharmacy");
+            payload.put("status", Map.of(
+                    "value", "pending",
+                    "updatedAt", System.currentTimeMillis()
+            ));
             payload.put("createdAt", System.currentTimeMillis());
-            String key = firebaseService.pushToRealtimeDb("pharmacies/pending", payload);
+            String key = firebaseService.pushToRealtimeDb("pharmacies", payload);
+
             return ResponseEntity.ok(Map.of("pendingId", key));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
 
-    @PostMapping("/pharmacy/{pendingId}/complete")
+    @PostMapping(
+            value = "/pharmacy/{pendingId}/complete",
+            consumes = "multipart/form-data"
+    )
+
     public ResponseEntity<?> pharmacyComplete(
             @PathVariable String pendingId,
-            @RequestParam("officialEmail") String officialEmail,
-            @RequestParam("phone") String phone,
-            @RequestParam(value="regCertificate",required=false) MultipartFile regCertificate,
-            @RequestParam(value="pharmacistLicenseCopy",required=false) MultipartFile pharmacistLicenseCopy,
-            @RequestParam(value="frontPhoto",required=false) MultipartFile frontPhoto,
-            @RequestParam(value="ownerID",required=false) MultipartFile ownerID,
-            @RequestParam Map<String, String> allParams
+
+            @RequestParam String pharmacyname,
+            @RequestParam String officialEmail,
+            @RequestParam String phone,
+            @RequestParam String name,
+            @RequestParam String businessRegNo,
+            @RequestParam String licenseNo,
+            @RequestParam String licenseExpiryDate,
+            @RequestParam(required = false) String taxId,
+            @RequestParam String address,
+            @RequestParam String city,
+            @RequestParam String province,
+            @RequestParam String postalCode,
+            @RequestParam String latitude,
+            @RequestParam String longitude,
+            @RequestParam String deliverySupport,
+            @RequestParam(required = false, defaultValue = "") String deliveryRange,
+            @RequestParam String openingTime,
+            @RequestParam String closingTime,
+            @RequestParam String operatingDays,
+            @RequestParam String services,
+
+            @RequestParam(value = "regCertificate", required = false) MultipartFile regCertificate,
+            @RequestParam(value = "pharmacistLicenseCopy", required = false) MultipartFile pharmacistLicenseCopy,
+            @RequestParam(value = "frontPhoto", required = false) MultipartFile frontPhoto,
+            @RequestParam(value = "ownerID", required = false) MultipartFile ownerID
     ) {
         try {
-            Map<String, Object> updates = new HashMap<>(allParams);
+            Map<String, Object> updates = new HashMap<>();
+
+            updates.put("pharmacyname", pharmacyname);
             updates.put("officialEmail", officialEmail);
             updates.put("phone", phone);
+            updates.put("name", name);
+            updates.put("businessRegNo", businessRegNo);
+            updates.put("licenseNo", licenseNo);
+            updates.put("licenseExpiryDate", licenseExpiryDate);
+            updates.put("taxId", taxId);
+            updates.put("address", address);
+            updates.put("city", city);
+            updates.put("province", province);
+            updates.put("postalCode", postalCode);
+            updates.put("latitude", latitude);
+            updates.put("longitude", longitude);
+            updates.put("deliverySupport", deliverySupport);
+            updates.put("deliveryRange", deliveryRange);
+            updates.put("openingTime", openingTime);
+            updates.put("closingTime", closingTime);
+            updates.put("operatingDays", operatingDays);
+            updates.put("services", services);
+
+            // 1️⃣ Set status
+            Map<String, Object> statusMap = new HashMap<>();
+            statusMap.put("value", "pending");
+            statusMap.put("updatedAt", System.currentTimeMillis());
+            updates.put("status", statusMap);
+
+// 2️⃣ Add completedAt
             updates.put("completedAt", System.currentTimeMillis());
 
+
+
+
+            // Supabase uploads (UNCHANGED)
             if (regCertificate != null && !regCertificate.isEmpty()) {
-                String path = "pharmacies/" + pendingId + "/regCertificate_" + regCertificate.getOriginalFilename();
-                String url = firebaseService.uploadFile(path, regCertificate);
-                updates.put("regCertificateUrl", url);
+                updates.put("regCertificateUrl",
+                        supabaseStorageService.uploadFile(
+                                "pharmacies/" + pendingId + "/regCertificate.pdf",
+                                regCertificate));
             }
+
             if (pharmacistLicenseCopy != null && !pharmacistLicenseCopy.isEmpty()) {
-                String path = "pharmacies/" + pendingId + "/license_" + pharmacistLicenseCopy.getOriginalFilename();
-                String url = firebaseService.uploadFile(path, pharmacistLicenseCopy);
-                updates.put("licenseUrl", url);
+                updates.put("pharmacistLicenseUrl",
+                        supabaseStorageService.uploadFile(
+                                "pharmacies/" + pendingId + "/pharmacistLicense.pdf",
+                                pharmacistLicenseCopy));
             }
+
             if (frontPhoto != null && !frontPhoto.isEmpty()) {
-                String path = "pharmacies/" + pendingId + "/front_" + frontPhoto.getOriginalFilename();
-                String url = firebaseService.uploadFile(path, frontPhoto);
-                updates.put("frontPhotoUrl", url);
+                updates.put("frontPhotoUrl",
+                        supabaseStorageService.uploadFile(
+                                "pharmacies/" + pendingId + "/frontPhoto.jpg",
+                                frontPhoto));
             }
+
             if (ownerID != null && !ownerID.isEmpty()) {
-                String path = "pharmacies/" + pendingId + "/ownerID_" + ownerID.getOriginalFilename();
-                String url = firebaseService.uploadFile(path, ownerID);
-                updates.put("ownerIdUrl", url);
+                updates.put("ownerIdUrl",
+                        supabaseStorageService.uploadFile(
+                                "pharmacies/" + pendingId + "/ownerID.pdf",
+                                ownerID));
             }
 
-            firebaseService.saveToRealtimeDb("pharmacies/pending/" + pendingId, updates);
+            firebaseService.saveToRealtimeDb("pharmacies/" + pendingId, updates);
 
-            firebaseService.saveToRealtimeDb("admin/notifications/pharmacyRequests/" + pendingId,
-                    Map.of("pendingId", pendingId, "createdAt", System.currentTimeMillis(), "status", "pending"));
 
-            return ResponseEntity.ok(Map.of("status", "sent for approval"));
+            Map<String, Object> notifStatus = new HashMap<>();
+            notifStatus.put("value", "pending");
+            notifStatus.put("createdAt", System.currentTimeMillis());
+
+            firebaseService.saveToRealtimeDb(
+                    "admin/notifications/pharmacyRequests/" + pendingId,
+                    Map.of(
+                            "pendingId", pendingId,
+                            "status", notifStatus
+                    )
+            );
+
+
+            return ResponseEntity.ok(Map.of("status", "pending approval"));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
+
+    @PostMapping("/admin/createPharmacy")
+    public ResponseEntity<?> createPharmacy(@RequestBody Map<String, String> payload) {
+        try {
+            String uid = payload.get("uid");        // Use pendingId as UID
+            String email = payload.get("email");
+            String password = payload.get("password");
+
+            // 1️⃣ Create Auth user with specific UID
+            UserRecord.CreateRequest request = new UserRecord.CreateRequest()
+                    .setUid(uid)
+                    .setEmail(email)
+                    .setPassword(password);
+
+            UserRecord user = firebaseService.createAuthUserWithUid(request);
+
+            return ResponseEntity.ok(Map.of("success", true, "uid", user.getUid()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
+
+
+
 
 }
