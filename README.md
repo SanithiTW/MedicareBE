@@ -48,7 +48,7 @@ The API ensures that all data operations are performed securely and efficiently.
 - **JavaScript**
 
 
-📂 Project Structure
+ 📂 Project Structure
 
 src/
 │
@@ -59,4 +59,4 @@ src/
 ├── config/ # Project configuration
 └── server.js # Application entry point
 
-## 📂 Project Structure
+
